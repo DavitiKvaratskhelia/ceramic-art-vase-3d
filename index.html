@@ -1,0 +1,2280 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ff5000">
+<title>Ceramic Art Vase — 3D</title>
+<link rel="canonical" href="https://ceramic-art-vase-3d.vercel.app/">
+<meta name="description" content="ხელით მოხატული კერამიკული ვაზა — ინტერაქტიული 3D ხედი · Zoommer">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zoommer">
+<meta property="og:title" content="Ceramic Art Vase — 3D | Zoommer">
+<meta property="og:description" content="ხელით მოხატული კერამიკული ვაზა — ინტერაქტიული 3D ხედი">
+<meta property="og:url" content="https://ceramic-art-vase-3d.vercel.app/">
+<meta property="og:image" content="https://ceramic-art-vase-3d.vercel.app/og-image.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ხელით მოხატული კერამიკული ვაზა, Zoommer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://ceramic-art-vase-3d.vercel.app/og-image.jpg">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ── Theme tokens. Dark is the default; [data-theme="light"] overrides. ── */
+  :root {
+    --theme-dur: 240ms;      /* UI colour changes */
+    --bg-dur: 850ms;         /* backdrop cross-fade between modes */
+    --zoommer: #ff5000;      /* official Zoommer orange (brand logo SVG) */
+    --fg: #ecedf0;
+    --muted: rgba(236, 237, 240, 0.55);
+    --panel: rgba(30, 32, 37, 0.58);
+    --line: rgba(255, 255, 255, 0.09);
+    --accent: #8fb0ff;
+    /* Shared glass material (control bar + theme switch) */
+    --glass-bg: rgba(26, 28, 33, 0.52);
+    --glass-border: rgba(255, 255, 255, 0.13);
+    --glass-filter: blur(20px) saturate(150%);
+    --glass-shadow: 0 12px 36px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    --ctl-icon: rgba(236, 237, 240, 0.62);
+    --ctl-icon-hover: #f4f5f7;
+    --ctl-hover-bg: rgba(255, 255, 255, 0.08);
+    --ctl-active-bg: #eceef2;
+    --ctl-active-icon: #15171c;
+    --ctl-active-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    --sep: rgba(255, 255, 255, 0.16);
+    /* Zoom slider */
+    --track: rgba(255, 255, 255, 0.12);
+    --tick: rgba(255, 255, 255, 0.2);
+    --tick-zero: rgba(255, 255, 255, 0.55);
+    --num: rgba(255, 255, 255, 0.035);
+    --num-active: rgba(255, 255, 255, 0.06);
+    --swatch-border: rgba(255, 255, 255, 0.25);
+    --ring-gap: #121316;
+    --ring: rgba(255, 255, 255, 0.85);
+    --spinner: rgba(255, 255, 255, 0.85);
+    --spinner-track: rgba(255, 255, 255, 0.14);
+    --page-bg:
+      radial-gradient(60% 45% at 50% 42%, rgba(120, 130, 155, 0.16) 0%, rgba(0, 0, 0, 0) 70%),
+      radial-gradient(130% 95% at 50% 40%, #2a2c31 0%, #18191c 50%, #0b0c0e 100%);
+    --page-bg-light:
+      radial-gradient(60% 45% at 50% 42%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 70%),
+      radial-gradient(130% 95% at 50% 40%, #f5f6f8 0%, #e5e7eb 55%, #d3d6dc 100%);
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --fg: #1b1d22;
+    --muted: rgba(27, 29, 34, 0.55);
+    --panel: rgba(255, 255, 255, 0.5);
+    --line: rgba(20, 22, 28, 0.08);
+    --accent: #3d6bff;
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-border: rgba(255, 255, 255, 0.8);
+    --glass-shadow: 0 12px 36px rgba(28, 34, 48, 0.16), 0 0 0 0.5px rgba(20, 22, 28, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    --ctl-icon: rgba(28, 30, 36, 0.58);
+    --ctl-icon-hover: #14161b;
+    --ctl-hover-bg: rgba(20, 22, 28, 0.06);
+    --ctl-active-bg: #ffffff;
+    --ctl-active-icon: #15171c;
+    --ctl-active-shadow: 0 2px 10px rgba(28, 34, 48, 0.18);
+    --sep: rgba(20, 22, 28, 0.12);
+    --track: rgba(20, 22, 28, 0.1);
+    --tick: rgba(20, 22, 28, 0.22);
+    --tick-zero: rgba(20, 22, 28, 0.6);
+    --num: rgba(20, 22, 28, 0.045);
+    --num-active: rgba(20, 22, 28, 0.07);
+    --swatch-border: rgba(20, 22, 28, 0.18);
+    --ring-gap: #eceef1;
+    --ring: rgba(20, 22, 28, 0.7);
+    --spinner: rgba(20, 22, 28, 0.75);
+    --spinner-track: rgba(20, 22, 28, 0.12);
+    color-scheme: light;
+  }
+  :root[data-theme="zoommer"] {
+    --fg: #ffffff;
+    --muted: rgba(255, 255, 255, 0.8);
+    --panel: rgba(112, 34, 0, 0.24);
+    --line: rgba(255, 255, 255, 0.2);
+    --accent: #ffffff;
+    --glass-bg: rgba(96, 28, 0, 0.34);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-shadow: 0 14px 40px rgba(96, 26, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    --ctl-icon: rgba(255, 255, 255, 0.9);
+    --ctl-icon-hover: #ffffff;
+    --ctl-hover-bg: rgba(255, 255, 255, 0.14);
+    --ctl-active-bg: #ffffff;
+    --ctl-active-icon: #1c1d21;
+    --ctl-active-shadow: 0 3px 12px rgba(110, 30, 0, 0.3);
+    --sep: rgba(255, 255, 255, 0.32);
+    --track: rgba(255, 255, 255, 0.26);
+    --tick: rgba(255, 255, 255, 0.45);
+    --tick-zero: #ffffff;
+    --num: rgba(255, 255, 255, 0.07);
+    --num-active: rgba(255, 255, 255, 0.11);
+    --swatch-border: rgba(255, 255, 255, 0.55);
+    --ring-gap: #ff5a12;
+    --ring: #ffffff;
+    --spinner: #ffffff;
+    --spinner-track: rgba(255, 255, 255, 0.3);
+    color-scheme: dark;
+  }
+  /* On orange the slider's orange fill would vanish — switch it to white. */
+  :root[data-theme="zoommer"] .zoom { --accent-a: #ffffff; --accent-b: #ffe6d6; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    color: var(--fg);
+    background: var(--page-bg);
+    background-color: #121316;
+    font-family: "Noto Sans Georgian", "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: color var(--theme-dur) ease;
+  }
+  /* Mode backdrops cross-fade over the dark base (gradients themselves can't be transitioned). */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background: var(--page-bg-light);
+    opacity: 0;
+    transition: opacity var(--bg-dur) ease;
+    pointer-events: none;
+  }
+  :root[data-theme="light"] body::before { opacity: 1; }
+
+  /* Zoommer studio: orange cyclorama — deep edges, soft centre light, broad overhead beam,
+     lit floor and a light haze. Pure gradients (no filters) so it stays cheap on phones. */
+  .zenv {
+    position: fixed; inset: -3%; z-index: -1;
+    opacity: 0;
+    transition: opacity var(--bg-dur) ease;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  :root[data-theme="zoommer"] .zenv { opacity: 1; }
+
+  /* Zoommer brand typography: a flat white HTML/SVG layer *behind* the transparent WebGL canvas.
+     The phone therefore always covers it, can never intersect it in 3D, and it never moves with the model.
+     Sizes / positions are set in px by layoutBrand() on resize only. */
+  .ztype {
+    position: fixed; inset: 0; z-index: -1;
+    opacity: 0;
+    transition: opacity var(--bg-dur) ease;
+    pointer-events: none;
+    color: #ffffff;
+    contain: strict;
+  }
+  :root[data-theme="zoommer"] .ztype { opacity: 1; }
+  .ztype > * { position: absolute; left: 50%; top: 0; transform: translate(-50%, -50%); }
+  .zt-line {
+    display: flex; align-items: center;
+    white-space: nowrap;
+    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    line-height: 1;
+    font-size: 100px;
+  }
+  .zt-pro, .zt-word { display: block; fill: #ffffff; overflow: visible; }
+  /* When the big words pass behind the zoom slider (narrow screens), back it with the bar's glass. */
+  .zoom::before {
+    content: ""; position: absolute; inset: 6px -6px; z-index: -1;
+    border-radius: 999px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-filter);
+    -webkit-backdrop-filter: var(--glass-filter);
+    box-shadow: var(--glass-shadow);
+    opacity: 0;
+    transition: opacity var(--bg-dur) ease;
+    pointer-events: none;
+  }
+  :root[data-theme="zoommer"].zt-under-slider .zoom::before { opacity: 1; }
+  .zenv > i { position: absolute; display: block; }
+  .zenv .z-base {
+    inset: 0;
+    background: radial-gradient(120% 95% at 50% 40%, #ff8538 0%, #ff5000 36%, #d84300 66%, #8c2900 100%);
+  }
+  .zenv .z-glow {
+    inset: 0;
+    background: radial-gradient(44% 40% at 50% 40%, rgba(255, 200, 156, 0.55) 0%, rgba(255, 164, 104, 0.18) 45%, rgba(255, 120, 60, 0) 75%);
+    transform: translate3d(calc(var(--px, 0) * 8px), calc(var(--py, 0) * 6px), 0);
+  }
+  .zenv .z-beam {
+    left: 50%; top: -14%;
+    width: 72vmax; height: 96vh; margin-left: -36vmax;
+    background: radial-gradient(50% 100% at 50% 0%, rgba(255, 242, 230, 0.34) 0%, rgba(255, 226, 202, 0.12) 42%, rgba(255, 210, 180, 0) 72%);
+    transform: translate3d(calc(var(--px, 0) * 20px), calc(var(--py, 0) * 10px), 0);
+  }
+  .zenv .z-floor {
+    left: -8%; right: -8%; bottom: 0; height: 48%;
+    background:
+      radial-gradient(60% 40% at 50% 44%, rgba(255, 216, 184, 0.46) 0%, rgba(255, 172, 122, 0.16) 46%, rgba(255, 120, 60, 0) 76%),
+      linear-gradient(180deg, rgba(255, 120, 50, 0) 0%, rgba(118, 32, 0, 0.3) 100%);
+    transform: translate3d(calc(var(--px, 0) * -14px), calc(var(--py, 0) * -5px), 0);
+  }
+  .zenv .z-fog {
+    inset: 0;
+    background: radial-gradient(85% 55% at 50% 64%, rgba(255, 234, 216, 0.16) 0%, rgba(255, 234, 216, 0) 70%);
+    transform: translate3d(calc(var(--px, 0) * 5px), 0, 0);
+  }
+  /* Same glass material for every floating control surface. */
+  .glass {
+    height: 56px;
+    padding: 8px;
+    border-radius: 999px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-filter);
+    -webkit-backdrop-filter: var(--glass-filter);
+    box-shadow: var(--glass-shadow);
+    transition: background-color var(--theme-dur) ease, border-color var(--theme-dur) ease, box-shadow var(--theme-dur) ease;
+  }
+  #c {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    touch-action: none;
+    cursor: grab;
+    outline: none;
+  }
+  #c.dragging { cursor: grabbing; }
+
+  header {
+    position: fixed;
+    top: max(18px, env(safe-area-inset-top));
+    left: max(22px, env(safe-area-inset-left));
+    pointer-events: none;
+  }
+  header h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: 0.01em; }
+  header p { margin: 3px 0 0; font-size: 12px; color: var(--muted); }
+
+  .swatches {
+    position: fixed;
+    top: max(18px, env(safe-area-inset-top));
+    right: max(22px, env(safe-area-inset-right));
+    display: flex; gap: 10px; padding: 7px 9px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+  }
+  .swatches button {
+    width: 20px; height: 20px; padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--swatch-border);
+    background: var(--sw);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .swatches button:hover { transform: scale(1.1); }
+  .swatches button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ring-gap), 0 0 0 3.5px var(--ring); }
+
+  /* ── Control bar: glass capsule, one row of 40 × 40 icon buttons ── */
+  .dock {
+    position: fixed;
+    z-index: 5;
+    left: 50%;
+    bottom: calc(24px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 6px;
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+  .dock::-webkit-scrollbar { display: none; }
+  .dock .group { position: relative; display: flex; align-items: center; gap: 6px; flex: none; }
+  .dock button {
+    position: relative; z-index: 1;
+    flex: none;
+    display: grid; place-items: center;
+    width: 40px; height: 40px; padding: 0;
+    appearance: none;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ctl-icon);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .dock button svg {
+    width: 21px; height: 21px;
+    fill: none; stroke: currentColor; stroke-width: 1.6;
+    stroke-linecap: round; stroke-linejoin: round;
+    pointer-events: none;
+  }
+  .dock button:hover { color: var(--ctl-icon-hover); background: var(--ctl-hover-bg); }
+  .dock button:active { transform: scale(0.94); }
+  /* Selected state: light pill, dark icon */
+  .dock button.active,
+  .dock button[aria-pressed="true"] { color: var(--ctl-active-icon); background: transparent; }
+  .dock button.active:hover { color: var(--ctl-active-icon); background: transparent; }
+  .dock #auto[aria-pressed="true"],
+  .dock #auto[aria-pressed="true"]:hover { color: var(--ctl-active-icon); background: var(--ctl-active-bg); box-shadow: var(--ctl-active-shadow); }
+  /* Segmented control: one light indicator slides between the mutually exclusive views */
+  .dock .seg-ind {
+    position: absolute; left: 0; top: 0; z-index: 0;
+    width: 40px; height: 40px;
+    border-radius: 999px;
+    background: var(--ctl-active-bg);
+    box-shadow: var(--ctl-active-shadow);
+    opacity: 0;
+    transition: transform 0.2s cubic-bezier(0.3, 0.7, 0.2, 1), opacity 0.18s ease, background-color var(--theme-dur) ease;
+    pointer-events: none;
+  }
+  .dock .seg-ind.show { opacity: 1; }
+  .dock .sep { flex: none; width: 1px; height: 24px; margin: 0 2px; background: var(--sep); }
+
+  /* ── Theme switch: Light / Dark / Zoommer. Same glass capsule as the bar (shared .glass);
+        three equal 40 px slots and one 40 px knob sliding between them. 136 = 2 × (1 border + 7) + 3 × 40 ── */
+  .theme-toggle {
+    position: fixed; z-index: 5; left: 0; top: 0;
+    display: flex; align-items: center;
+    width: 136px;
+    padding: 7px;                  /* + 1 px border = 8 px from the outer edge, like the bar */
+    visibility: hidden;            /* shown once JS has measured where it goes */
+  }
+  .theme-toggle.placed { visibility: visible; }
+  .theme-toggle .tt-knob {
+    position: absolute; left: 7px; top: 7px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--ctl-active-bg);
+    box-shadow: var(--ctl-active-shadow);
+    transform: translateX(calc(var(--i, 1) * 40px));
+    transition: transform 260ms cubic-bezier(0.3, 0.7, 0.2, 1), background-color var(--theme-dur) ease, box-shadow var(--theme-dur) ease;
+    pointer-events: none;
+  }
+  .theme-toggle button,
+  .share button {
+    position: relative; z-index: 1;
+    flex: none;
+    display: grid; place-items: center;
+    width: 40px; height: 40px; padding: 0; margin: 0;
+    appearance: none; border: 0; border-radius: 50%;
+    background: transparent;
+    color: var(--ctl-icon);
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: color 0.2s ease, background-color 0.18s ease, transform 0.18s ease;
+  }
+  .theme-toggle button:hover,
+  .share button:hover { color: var(--ctl-icon-hover); background: var(--ctl-hover-bg); }
+  .theme-toggle button[aria-checked="true"],
+  .theme-toggle button[aria-checked="true"]:hover { color: var(--ctl-active-icon); background: transparent; }
+  .theme-toggle button:active,
+  .share-main button:active { transform: scale(0.92); }
+  .theme-toggle button:focus-visible,
+  .share button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .theme-toggle svg,
+  .share svg {
+    width: 20px; height: 20px;
+    fill: none; stroke: currentColor; stroke-width: 1.6;
+    stroke-linecap: round; stroke-linejoin: round;
+    pointer-events: none;
+  }
+  /* The filled, circular emblem reads heavier than line icons — 19 px matches their visual weight. */
+  .theme-toggle svg.zm { width: 19px; height: 19px; fill: currentColor; stroke: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-toggle .tt-knob { transition-duration: 0.01ms; }
+    .zenv, .ztype, body::before { transition-duration: 200ms; }
+  }
+
+  /* ── Share: 56 × 56 glass button, left edge, vertically centred; menu capsule slides out to its right ── */
+  .share {
+    position: fixed; z-index: 6;
+    left: calc(24px + env(safe-area-inset-left));
+    top: 50%;
+    width: 56px; height: 56px;
+    /* Whole control (button, menu, gaps) drawn at 90 %: 56 → 50.4 px, 40 → 36 px.
+       Scaling from the left-centre keeps its left edge and vertical centre in place. */
+    transform: translateY(-50%) scale(0.9);
+    transform-origin: 0 50%;
+  }
+  .share-main {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+    width: 56px;
+    padding: 7px;                                   /* + 1 px border = 8 px */
+  }
+  .share-main svg { position: absolute; transition: opacity 0.2s ease, transform 0.26s cubic-bezier(0.3, 0.7, 0.2, 1); }
+  .share-main .i-close { opacity: 0; transform: rotate(-90deg) scale(0.6); }
+  .share.open .share-main .i-share { opacity: 0; transform: rotate(90deg) scale(0.6); }
+  .share.open .share-main .i-close { opacity: 1; transform: none; }
+  /* The main button sits alone in its glass circle: no inner hover disc, just a brighter icon. */
+  .share .share-main button:hover,
+  .share.open .share-main button { color: var(--ctl-icon-hover); background: transparent; }
+
+  .share-menu {
+    position: absolute; z-index: 1; left: 64px; top: 0;       /* 56 px button + 8 px gap */
+    display: flex; align-items: center; gap: 6px;
+    width: max-content;
+    padding: 7px;
+    transform-origin: left center;
+    opacity: 0;
+    transform: translateX(-12px) scale(0.92);
+    visibility: hidden;
+    /* closing: quicker, no overshoot */
+    transition: opacity 200ms ease, transform 230ms cubic-bezier(0.4, 0, 0.7, 0.2), visibility 0s linear 230ms,
+      background-color var(--theme-dur) ease, border-color var(--theme-dur) ease, box-shadow var(--theme-dur) ease;
+  }
+  .share.open .share-menu {
+    opacity: 1; transform: none; visibility: visible;
+    /* opening: ~330 ms with a light spring */
+    transition: opacity 220ms ease, transform 330ms cubic-bezier(0.34, 1.32, 0.64, 1), visibility 0s,
+      background-color var(--theme-dur) ease, border-color var(--theme-dur) ease, box-shadow var(--theme-dur) ease;
+  }
+  .share-menu button { opacity: 0; transform: translateX(-6px) scale(0.9); }
+  .share.open .share-menu button {
+    opacity: 1; transform: none;
+    transition: opacity 220ms ease calc(60ms + var(--k, 0) * 40ms),
+      transform 300ms cubic-bezier(0.34, 1.32, 0.64, 1) calc(60ms + var(--k, 0) * 40ms),
+      color 0.2s ease, background-color 0.18s ease;
+  }
+  .share.open .share-menu button:active { transform: scale(0.92); transition-delay: 0s; }
+  .share-menu button[hidden] { display: none; }
+  .share-menu button svg { position: absolute; transition: opacity 0.18s ease, transform 0.22s ease; }
+  .share-menu button .i-check { opacity: 0; transform: scale(0.6); }
+  .share-menu button.done .i-main { opacity: 0; transform: scale(0.6); }
+  .share-menu button.done .i-check { opacity: 1; transform: none; }
+  .share svg .dot { fill: currentColor; stroke: none; }
+
+  /* Not enough width (very narrow phones): stack the actions vertically next to the button. */
+  .share.vertical .share-menu { left: 0; top: 64px; flex-direction: column; transform-origin: top center; transform: translateY(-12px) scale(0.92); }
+  .share.vertical.up .share-menu { top: auto; bottom: 64px; transform-origin: bottom center; transform: translateY(12px) scale(0.92); }
+  .share.vertical.open .share-menu { transform: none; }
+  .share.vertical .share-menu button { transform: translateY(-6px) scale(0.9); }
+  .share.vertical.open .share-menu button { transform: none; }
+
+  .share-toast {
+    position: absolute; left: 64px; top: 66px;
+    height: auto; padding: 8px 14px;
+    font-size: 12.5px; line-height: 1.2; white-space: nowrap;
+    color: var(--fg);
+    opacity: 0; transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+  }
+  .share-toast.show { opacity: 1; transform: none; }
+  .share.vertical .share-toast { top: 4px; }
+
+  @media (max-width: 640px) {
+    .share { left: calc(14px + env(safe-area-inset-left)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .share-menu, .share.open .share-menu, .share-menu button, .share.open .share-menu button,
+    .share.vertical .share-menu, .share.vertical .share-menu button {
+      transform: none !important;
+      transition: opacity 120ms ease, visibility 0s linear 120ms !important;
+    }
+    .share.open .share-menu { transition: opacity 120ms ease !important; }
+    .share-main svg { transition: opacity 120ms ease; transform: none !important; }
+  }
+  :root.theme-stacked .hint { bottom: calc(160px + env(safe-area-inset-bottom)); }
+  .dock button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .tip {
+    position: fixed; z-index: 30; left: 0; top: 0;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(20, 21, 25, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f1f2f4;
+    font-size: 12px; line-height: 1.2;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    transform: translate(-50%, calc(-100% + 4px));
+    transition: opacity 0.16s ease, transform 0.16s ease;
+  }
+  .tip.show { opacity: 1; transform: translate(-50%, -100%); }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .hint {
+    position: fixed; left: 50%;
+    bottom: calc(94px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    font-size: 12px; color: var(--muted);
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    text-align: center;
+    pointer-events: none;
+    transition: opacity 0.8s;
+  }
+  .hint.gone { opacity: 0; }
+
+  #loader, #error {
+    position: fixed; inset: 0; z-index: 10;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 16px; padding: 24px; text-align: center;
+    background: var(--page-bg);
+    transition: opacity 0.7s;
+  }
+  :root[data-theme="light"] #loader, :root[data-theme="light"] #error { background: var(--page-bg-light); }
+  :root[data-theme="zoommer"] #loader, :root[data-theme="zoommer"] #error { background: radial-gradient(120% 95% at 50% 40%, #ff8538 0%, #ff5000 40%, #b33800 100%); }
+  #loader.done { opacity: 0; pointer-events: none; }
+  .spinner {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2.5px solid var(--spinner-track);
+    border-top-color: var(--spinner);
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loader-text { font-size: 13px; color: var(--muted); }
+  #error[hidden] { display: none; }
+  #error h2 { margin: 0; font-size: 18px; font-weight: 600; }
+  #error p { margin: 0; max-width: 460px; font-size: 14px; line-height: 1.6; color: var(--muted); }
+
+  /* ── Zoom slider (−3 … +3) ── */
+  .zoom {
+    --pad: 36px;
+    --accent-a: #ff9a5c;
+    --accent-b: #ee5a2a;
+    position: fixed;
+    right: max(26px, env(safe-area-inset-right));
+    top: 50%;
+    transform: translateY(-50%);
+    width: 67px; height: clamp(190px, calc(100vh - 210px), 320px);
+    user-select: none;
+  }
+  .zoom-num {
+    position: absolute; right: 2px; top: 50%;
+    transform: translateY(-56%);
+    font-size: clamp(84px, 16vh, 132px); font-weight: 300; line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--num);
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .zoom.active .zoom-num { color: var(--num-active); }
+  .zoom-ticks { position: absolute; left: 2px; top: var(--pad); bottom: var(--pad); width: 12px; pointer-events: none; }
+  .zoom-ticks i {
+    position: absolute; left: 0; height: 2px; width: 6px; margin-top: -1px;
+    border-radius: 1px;
+    background: var(--tick);
+    transition: background 0.15s;
+  }
+  .zoom-ticks i.major { width: 11px; }
+  .zoom-ticks i.on { background: var(--accent-b); }
+  .zoom-ticks i.zero { background: var(--tick-zero); }
+  .zoom-hit {
+    position: absolute; left: 14px; width: 36px;
+    top: var(--pad); bottom: var(--pad);
+    cursor: pointer;
+    touch-action: none;
+    outline: none;
+  }
+  .zoom-track {
+    position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 8px; margin-left: -4px;
+    border-radius: 6px;
+    background: var(--track);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+  .zoom-fill {
+    position: absolute; left: 0; right: 0; top: 50%; height: 0;
+    border-radius: 6px;
+    background: linear-gradient(180deg, var(--accent-a), var(--accent-b));
+    box-shadow: 0 0 12px rgba(238, 90, 42, 0.35);
+  }
+  .zoom-thumb {
+    position: absolute; left: 50%; top: 50%;
+    width: 28px; height: 52px;
+    transform: translate(-50%, -50%);
+    border-radius: 14px;
+    background: linear-gradient(155deg, #fbfbfc 0%, #e4e6ea 55%, #cfd2d8 100%);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 -2px 4px rgba(0, 0, 0, 0.08) inset;
+    cursor: grab;
+    transition: box-shadow 0.2s;
+  }
+  .zoom-thumb::after {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: 12px; height: 12px; margin: -6px 0 0 -6px;
+    border-radius: 50%;
+    background: linear-gradient(160deg, #eef0f3, #dcdfe4);
+    box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.15) inset;
+  }
+  .zoom.active .zoom-thumb { cursor: grabbing; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 0 4px rgba(238, 90, 42, 0.25), 0 1px 0 rgba(255, 255, 255, 0.9) inset; }
+  .zoom-hit:focus-visible .zoom-thumb { box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), 0 0 0 2px #121316, 0 0 0 4px var(--accent); }
+  .zoom-lab {
+    position: absolute; left: 52px;
+    transform: translateY(-50%);
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.02em;
+    color: var(--muted);
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+  }
+  .zoom-lab.top { top: var(--pad); }
+  .zoom-lab.mid { top: 50%; }
+  .zoom-lab.bot { top: calc(100% - var(--pad)); }
+
+  @media (max-width: 640px) {
+    .zoom { right: max(8px, env(safe-area-inset-right)); width: 46px; height: 236px; top: 50%; --pad: 30px; }
+    .zoom-num { display: none; }
+    .zoom-ticks { left: 0; width: 9px; }
+    .zoom-ticks i { width: 5px; }
+    .zoom-ticks i.major { width: 8px; }
+    .zoom-hit { left: 9px; width: 26px; }
+    .zoom-track { width: 6px; margin-left: -3px; }
+    .zoom-thumb { width: 22px; height: 40px; border-radius: 11px; }
+    .zoom-thumb::after { width: 10px; height: 10px; margin: -5px 0 0 -5px; }
+    .zoom-lab { left: 35px; font-size: 9px; letter-spacing: 0; }
+  }
+
+  @media (max-width: 640px) {
+    .hint { font-size: 11px; }
+    header h1 { font-size: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spinner { animation-duration: 2.5s; }
+  }
+</style>
+<script>
+  // Apply the saved theme before first paint (no flash). Zoommer is the default.
+  (function () {
+    var t = 'zoommer';
+    try {
+      var saved = localStorage.getItem('vase3d-theme');
+      if (saved === 'light' || saved === 'dark' || saved === 'zoommer') t = saved;
+    } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div class="zenv" id="zenv" aria-hidden="true"><i class="z-base"></i><i class="z-glow"></i><i class="z-beam"></i><i class="z-floor"></i><i class="z-fog"></i></div>
+<!-- Zoommer brand typography (behind the 3D canvas). -->
+<div class="ztype" id="ztype" aria-hidden="true">
+  <div class="zt-line" id="zt-line"><span>Hand-painted Ceramics</span></div>
+  <!-- "ART": wide geometric letters drawn for this page (same stroke system as PRO on the iPhone page:
+       72-unit stems, 46-unit bars, wide rounded counters). viewBox = the ink box. -->
+  <svg class="zt-pro" id="zt-pro" viewBox="0 0 1000 200" aria-hidden="true">
+    <path fill-rule="evenodd" d="M0 200V70A70 70 0 0 1 70 0H240A70 70 0 0 1 310 70V200H238V130H72V200Z M72 84H238V74A28 28 0 0 0 210 46H100A28 28 0 0 0 72 74Z"/>
+    <path fill-rule="evenodd" d="M340 0H590A60 60 0 0 1 650 60V64A60 60 0 0 1 590 124H412V200H340Z M412 46H575A17 17 0 0 1 592 63A17 17 0 0 1 575 80H412Z"/>
+    <path d="M522 112H616L670 200H574Z"/>
+    <path d="M700 0H1000V58H886V200H814V58H700Z"/>
+  </svg>
+  <!-- Official Latin "zoommer" wordmark: the 7 letter paths from page 8 of "zoommer Brand Guidlines 2025.pdf",
+       geometry unchanged (only recoloured white). viewBox = the artwork's exact ink box. -->
+  <svg class="zt-word" id="zt-word" viewBox="696.546 -366.243 485.32 62.742" aria-hidden="true">
+    <g id="zt-word-ink" fill="#ffffff">
+      <path d="M738.069 -353.642L701.943 -327.453C691.738 -320.055 696.971 -303.92 709.576 -303.92L742.126 -303.92C745.603 -303.92 748.422 -306.738 748.422 -310.215C748.422 -313.696 745.598 -316.516 742.117 -316.511L708.542 -316.469L744.737 -342.709C754.943 -350.107 749.71 -366.242 737.104 -366.242L704.317 -366.242C700.84 -366.242 698.021 -363.423 698.021 -359.946L698.021 -359.938C698.021 -356.461 700.84 -353.642 704.317 -353.642Z"/>
+      <path d="M801.806 -316.52L775.138 -316.52C773.751 -316.52 772.629 -317.643 772.629 -319.029L772.629 -351.134C772.629 -352.519 773.751 -353.643 775.138 -353.643L801.806 -353.643C803.191 -353.643 804.315 -352.519 804.315 -351.134L804.315 -319.029C804.315 -317.643 803.191 -316.52 801.806 -316.52M804.244 -366.243L772.699 -366.243C765.368 -366.243 759.422 -360.299 759.422 -352.966L759.422 -317.196C759.422 -309.864 765.368 -303.92 772.699 -303.92L804.244 -303.92C811.577 -303.92 817.52 -309.864 817.52 -317.196L817.52 -352.966C817.52 -360.299 811.577 -366.243 804.244 -366.243"/>
+      <path d="M872.613 -316.52L845.945 -316.52C844.558 -316.52 843.435 -317.643 843.435 -319.029L843.435 -351.134C843.435 -352.519 844.558 -353.643 845.945 -353.643L872.613 -353.643C873.998 -353.643 875.122 -352.519 875.122 -351.134L875.122 -319.029C875.122 -317.643 873.998 -316.52 872.613 -316.52M875.051 -366.243L843.507 -366.243C836.174 -366.243 830.229 -360.299 830.229 -352.966L830.229 -317.196C830.229 -309.864 836.174 -303.92 843.507 -303.92L875.051 -303.92C882.383 -303.92 888.327 -309.864 888.327 -317.196L888.327 -352.966C888.327 -360.299 882.383 -366.243 875.051 -366.243"/>
+      <path d="M1161.405 -310.104L1161.405 -351.133C1161.405 -352.519 1162.528 -353.642 1163.914 -353.642L1175.571 -353.642C1179.049 -353.642 1181.866 -356.462 1181.866 -359.938L1181.866 -359.946C1181.866 -363.424 1179.049 -366.242 1175.571 -366.242L1161.475 -366.242C1154.143 -366.242 1148.199 -360.298 1148.199 -352.966L1148.199 -310.104C1148.199 -306.457 1151.155 -303.501 1154.802 -303.501C1158.449 -303.501 1161.405 -306.457 1161.405 -310.104"/>
+      <path d="M963.966 -366.242L914.315 -366.242C906.982 -366.242 901.037 -360.298 901.037 -352.966L901.037 -310.252C901.037 -306.605 903.993 -303.649 907.641 -303.649C911.287 -303.649 914.243 -306.605 914.243 -310.252L914.243 -351.133C914.243 -352.519 915.367 -353.642 916.753 -353.642L932.746 -353.642L932.746 -310.252C932.746 -306.605 935.702 -303.649 939.349 -303.649C942.995 -303.649 945.951 -306.605 945.951 -310.252L945.951 -353.642L961.528 -353.642C962.914 -353.642 964.035 -352.519 964.035 -351.133L964.035 -310.252C964.035 -306.605 966.992 -303.649 970.639 -303.649C974.285 -303.649 977.241 -306.605 977.241 -310.252L977.241 -352.966C977.241 -360.298 971.298 -366.242 963.966 -366.242"/>
+      <path d="M1052.881 -366.242L1003.23 -366.242C995.897 -366.242 989.952 -360.298 989.952 -352.966L989.952 -310.252C989.952 -306.605 992.908 -303.649 996.556 -303.649C1000.202 -303.649 1003.158 -306.605 1003.158 -310.252L1003.158 -351.133C1003.158 -352.519 1004.282 -353.642 1005.668 -353.642L1021.661 -353.642L1021.661 -310.252C1021.661 -306.605 1024.617 -303.649 1028.264 -303.649C1031.91 -303.649 1034.866 -306.605 1034.866 -310.252L1034.866 -353.642L1050.442 -353.642C1051.827 -353.642 1052.951 -352.519 1052.951 -351.133L1052.951 -310.252C1052.951 -306.605 1055.906 -303.649 1059.555 -303.649C1063.2 -303.649 1066.156 -306.605 1066.156 -310.252L1066.156 -352.966C1066.156 -360.298 1060.213 -366.242 1052.881 -366.242"/>
+      <path d="M1092.072 -351.133C1092.072 -352.519 1093.196 -353.642 1094.582 -353.642L1121.251 -353.642C1122.634 -353.642 1123.759 -352.519 1123.759 -351.133L1123.759 -341.787C1123.759 -340.401 1122.634 -339.279 1121.251 -339.279L1092.073 -339.279ZM1123.687 -326.678C1131.019 -326.678 1136.965 -332.622 1136.965 -339.954L1136.965 -352.965C1136.965 -360.298 1131.019 -366.242 1123.687 -366.242L1092.144 -366.242C1084.811 -366.242 1078.867 -360.298 1078.867 -352.965L1078.867 -317.196C1078.867 -309.863 1084.811 -303.92 1092.144 -303.92L1127.714 -303.92C1131.193 -303.92 1134.013 -306.74 1134.013 -310.219C1134.013 -313.699 1131.193 -316.52 1127.714 -316.52L1094.582 -316.52C1093.196 -316.52 1092.073 -317.643 1092.073 -319.029L1092.073 -326.678Z"/>
+    </g>
+  </svg>
+</div>
+<canvas id="c" tabindex="0" aria-label="კერამიკული ვაზის ინტერაქტიული 3D მოდელი"></canvas>
+
+<header>
+  <h1>Ceramic Art Vase</h1>
+  <p id="color-name">Ink brushstroke</p>
+</header>
+
+<div class="swatches" role="group" aria-label="ფერი">
+  <button data-color="ink" style="--sw:conic-gradient(#131417 0 34%, #64676b 0 44%, #a9acaf 0 52%, #e7e7e3 0)" aria-pressed="true" title="Ink brushstroke" aria-label="Ink brushstroke"></button>
+</div>
+
+<div class="zoom" id="zoom">
+  <div class="zoom-num" id="zoom-num" aria-hidden="true">0</div>
+  <div class="zoom-ticks" id="zoom-ticks" aria-hidden="true"></div>
+  <div class="zoom-hit" id="zoom-hit" role="slider" tabindex="0" aria-label="მასშტაბი" aria-orientation="vertical"
+       aria-valuemin="-3" aria-valuemax="3" aria-valuenow="0" aria-valuetext="0">
+    <div class="zoom-track"><div class="zoom-fill" id="zoom-fill"></div></div>
+    <div class="zoom-thumb" id="zoom-thumb"></div>
+  </div>
+  <span class="zoom-lab top" aria-hidden="true">+3</span>
+  <span class="zoom-lab mid" aria-hidden="true">0</span>
+  <span class="zoom-lab bot" aria-hidden="true">−3</span>
+</div>
+
+<div class="hint" id="hint">გადაათრიეთ დასატრიალებლად · მასშტაბი: ბორბალი ან ორი თითი</div>
+
+<nav class="dock glass" id="dock" aria-label="მართვის პანელი">
+  <div class="group seg" role="group" aria-label="ხედები">
+    <span class="seg-ind" id="seg-ind" aria-hidden="true"></span>
+    <button data-view="top" data-tip="ზედა ხედი" aria-label="ზედა ხედი" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.6"/>
+        <circle cx="12" cy="12" r="5"/>
+        <circle cx="12" cy="12" r="3.3" stroke-width="1.2" opacity="0.6"/>
+      </svg>
+    </button>
+    <button data-view="front" class="active" data-tip="წინა ხედი" aria-label="წინა ხედი" aria-pressed="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9.6 3.6h4.8v1.8c2.6.8 4.4 2.9 4.4 6.2 0 4.3-2 7.6-3.4 9H8.6c-1.4-1.4-3.4-4.7-3.4-9 0-3.3 1.8-5.4 4.4-6.2Z"/>
+        <path d="M8.6 10.2h5.6M7.6 13h6.8M8.2 15.8h5M9.2 18.4h3.6" stroke-width="1.5"/>
+      </svg>
+    </button>
+    <button data-view="back" data-tip="უკანა ხედი" aria-label="უკანა ხედი" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9.6 3.6h4.8v1.8c2.6.8 4.4 2.9 4.4 6.2 0 4.3-2 7.6-3.4 9H8.6c-1.4-1.4-3.4-4.7-3.4-9 0-3.3 1.8-5.4 4.4-6.2Z"/>
+        <path d="M7.6 9.8h3.2M14.6 13.2h2.6M8 16.6h2.4" stroke-width="1.2" opacity="0.6"/>
+      </svg>
+    </button>
+    <button data-view="bottom" data-tip="ქვედა ხედი" aria-label="ქვედა ხედი" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.6"/>
+        <circle cx="12" cy="12" r="4.6"/>
+        <circle cx="12" cy="7.2" r="0.9" stroke-width="1.2"/>
+        <circle cx="7.9" cy="14.4" r="0.9" stroke-width="1.2"/>
+        <circle cx="16.1" cy="14.4" r="0.9" stroke-width="1.2"/>
+      </svg>
+    </button>
+    <button data-view="home" data-tip="საწყისი ხედი" aria-label="საწყისი ხედი" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9.6 4.6v1c-2.6.8-4.4 2.8-4.4 6 0 4.3 2 7.6 3.4 9h6.8c1.4-1.4 3.4-4.7 3.4-9 0-3.2-1.8-5.2-4.4-6v-1"/>
+        <ellipse cx="12" cy="4.6" rx="2.4" ry="1"/>
+      </svg>
+    </button>
+  </div>
+  <span class="sep" aria-hidden="true"></span>
+  <div class="group">
+    <button id="auto" data-tip="ავტობრუნვა" aria-label="ავტობრუნვა" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M11 7.4h2v.8c1.2.4 1.9 1.4 1.9 2.9 0 2-.8 3.6-1.5 4.3h-2.8c-.7-.7-1.5-2.3-1.5-4.3 0-1.5.7-2.5 1.9-2.9Z"/>
+        <path d="M4.7 9.3A7.8 7.8 0 0 1 18 7"/>
+        <path d="M18 7V4.4M18 7h-2.6"/>
+        <path d="M19.3 14.7A7.8 7.8 0 0 1 6 17"/>
+        <path d="M6 17v2.6M6 17h2.6"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+<!-- Zoommer emblem: the round mark from the official logo (ZoommerSalesDashboard/…/zoommer-logo.svg), wordmark removed. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="zm-mark" viewBox="0 0 44.6 44.6">
+    <path d="M160.488,583.192c-.053-.06-.107-.121-.163-.182a22.413,22.413,0,0,0-20.96-6.612.049.049,0,0,1-.044-.084l20.036-18.75h0c.381-.356.771-.752,1.192-1.212a1.635,1.635,0,0,0,.058-2.193,1.585,1.585,0,0,0-2.343,0c-.386.422-.737.781-1.073,1.1a19.239,19.239,0,0,1-27.194-.9c-.033-.035-.064-.071-.1-.108l-.053-.061a1.63,1.63,0,0,0-2.213-.247,1.584,1.584,0,0,0-.195,2.307l.074.084c.055.063.11.126.168.189A22.263,22.263,0,0,0,143.3,563.6q.382.013.762.012a22.456,22.456,0,0,0,4.564-.471.049.049,0,0,1,.044.084l-20.021,18.735c-.381.356-.772.754-1.194,1.213a1.634,1.634,0,0,0-.058,2.192,1.583,1.583,0,0,0,2.343,0c.387-.423.738-.781,1.074-1.1a19.262,19.262,0,0,1,27.194.9c.032.034.062.069.092.1l.118.134a1.584,1.584,0,0,0,2.345-2.131Z" transform="translate(-121.518 -547.461)"/>
+    <path d="M100.309,628.269a.053.053,0,0,0-.009-.085l-1.751-1.041a30.93,30.93,0,0,1-4.036-2.87,1.618,1.618,0,0,0-2.021-.09,1.586,1.586,0,0,0-.063,2.477c.867.729,1.768,1.414,2.692,2.048a.047.047,0,0,1,.005.073l-2.733,2.558a1.629,1.629,0,0,0-.182,2.22,1.585,1.585,0,0,0,2.3.139Z" transform="translate(-91.855 -606.756)"/>
+    <path d="M119.831,592a25,25,0,0,1-12.189-6.749,1.585,1.585,0,0,0-2.34.105,1.64,1.64,0,0,0,.161,2.2,28.186,28.186,0,0,0,10.811,6.729.047.047,0,0,1,.017.079l-10.281,9.621q-.3.278-.581.562a1.636,1.636,0,0,0-.006,2.345,1.585,1.585,0,0,0,2.187-.045c.185-.184.372-.367.565-.547L122.9,592.512a.05.05,0,0,0-.032-.087,20.182,20.182,0,0,1-3.039-.426" transform="translate(-102.89 -573.771)"/>
+    <path d="M330.894,629.961l2.733-2.557a1.63,1.63,0,0,0,.181-2.221,1.584,1.584,0,0,0-2.3-.139l-5.8,5.429a.054.054,0,0,0,.009.085l1.751,1.041a30.941,30.941,0,0,1,4.036,2.87,1.619,1.619,0,0,0,2.021.09,1.586,1.586,0,0,0,.063-2.477c-.867-.729-1.767-1.414-2.691-2.048a.046.046,0,0,1-.006-.073" transform="translate(-289.191 -607.385)"/>
+    <path d="M258.3,598.171a.047.047,0,0,1-.016-.079l10.28-9.62c.2-.184.391-.372.581-.56a1.637,1.637,0,0,0,.007-2.346,1.585,1.585,0,0,0-2.187.045c-.185.185-.373.367-.565.547l-14.727,13.781a.05.05,0,0,0,.032.087,20.233,20.233,0,0,1,3.039.426,25.012,25.012,0,0,1,12.188,6.749,1.585,1.585,0,0,0,2.34-.105,1.639,1.639,0,0,0-.16-2.2,28.2,28.2,0,0,0-10.811-6.729" transform="translate(-226.708 -574.079)"/>
+    <path d="M157.383,738.69c-.215.2-.427.412-.646.641a1.584,1.584,0,1,0,2.288,2.191c.18-.188.351-.358.524-.519a13.4,13.4,0,0,1,18.815.547,1.584,1.584,0,1,0,2.3-2.184,16.58,16.58,0,0,0-23.276-.676" transform="translate(-146.238 -699.903)"/>
+    <path d="M207.872,773.206a10.675,10.675,0,0,0-10.71-.016,1.584,1.584,0,0,0,1.589,2.741,7.5,7.5,0,0,1,7.525.012,1.584,1.584,0,1,0,1.6-2.737" transform="translate(-180.057 -731.558)"/>
+    <path d="M169.071,537.8a16.472,16.472,0,0,0,11.29-4.442c.215-.2.426-.411.646-.64a1.584,1.584,0,1,0-2.287-2.192c-.18.188-.351.358-.524.519a13.4,13.4,0,0,1-18.815-.547,1.584,1.584,0,0,0-2.295,2.184,16.493,16.493,0,0,0,11.985,5.119" transform="translate(-146.535 -527.539)"/>
+    <path d="M197.517,517.182a10.677,10.677,0,0,0,10.711.017,1.584,1.584,0,0,0-1.589-2.741,7.5,7.5,0,0,1-7.525-.012,1.584,1.584,0,1,0-1.6,2.736" transform="translate(-180.36 -514.229)"/>
+  </symbol>
+</svg>
+<div class="glass theme-toggle" id="theme" role="radiogroup" aria-label="თემა">
+  <span class="tt-knob" aria-hidden="true"></span>
+  <button type="button" role="radio" data-mode="light" aria-checked="false" tabindex="-1" aria-label="Light" data-tip="Light">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.6"/><path d="M12 3.2v1.9M12 18.9v1.9M3.2 12h1.9M18.9 12h1.9M5.8 5.8l1.3 1.3M16.9 16.9l1.3 1.3M5.8 18.2l1.3-1.3M16.9 7.1l1.3-1.3"/></svg>
+  </button>
+  <button type="button" role="radio" data-mode="zoommer" aria-checked="true" tabindex="0" aria-label="Zoommer" data-tip="Zoommer">
+    <svg class="zm" viewBox="0 0 44.6 44.6" aria-hidden="true"><use href="#zm-mark"/></svg>
+  </button>
+  <button type="button" role="radio" data-mode="dark" aria-checked="false" tabindex="-1" aria-label="Dark" data-tip="Dark">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.2 14.6A7.6 7.6 0 0 1 9.4 4.8a7.6 7.6 0 1 0 9.8 9.8Z"/></svg>
+  </button>
+</div>
+<div class="share" id="share">
+  <div class="glass share-main">
+    <button type="button" id="share-btn" aria-expanded="false" aria-controls="share-menu" aria-label="გაზიარება" data-tip="გაზიარება">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="i-share"><circle class="dot" cx="18" cy="5.5" r="2.7"/><circle class="dot" cx="6" cy="12" r="2.7"/><circle class="dot" cx="18" cy="18.5" r="2.7"/><path d="M8.2 10.8l7.6-4.2M8.2 13.2l7.6 4.2"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="i-close"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>
+    </button>
+  </div>
+  <div class="glass share-menu" id="share-menu" role="group" aria-label="გაზიარება" aria-hidden="true" inert>
+    <button type="button" data-share="instagram" aria-label="Instagram" data-tip="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><circle class="dot" cx="16.9" cy="7.1" r="1"/></svg></button>
+    <button type="button" data-share="whatsapp" aria-label="WhatsApp" data-tip="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.4 11.7a8.4 8.4 0 0 1-12.3 7.4L3.6 20.4l1.4-4.3a8.4 8.4 0 1 1 15.4-4.4Z"/><path d="M9.1 8.3c.3-.5.9-.5 1.2 0l.7 1.5c.1.3 0 .6-.2.8l-.5.5c.5 1.1 1.4 2 2.5 2.5l.5-.5c.2-.2.5-.3.8-.2l1.5.7c.5.3.5.9 0 1.2-.8.5-1.8.6-2.7.3-2-.8-3.6-2.4-4.4-4.4-.3-.9-.2-1.9.6-2.4Z"/></svg></button>
+    <button type="button" data-share="facebook" aria-label="Facebook" data-tip="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M13.3 20.5v-7.2h2.3l.3-2.6h-2.6V9.2c0-.8.3-1.3 1.3-1.3h1.4V5.6c-.3 0-1.1-.1-2-.1-2 0-3.3 1.2-3.3 3.4v1.8H8.4v2.6h2.3v7.2"/></svg></button>
+    <button type="button" data-share="copy" aria-label="ბმულის კოპირება" data-tip="ბმულის კოპირება"><svg viewBox="0 0 24 24" aria-hidden="true" class="i-main"><path d="M10.2 13.8a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.1 1.1"/><path d="M13.8 10.2a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.1-1.1"/></svg><svg viewBox="0 0 24 24" aria-hidden="true" class="i-check"><path d="M5 12.6l4.3 4.3L19 7.2"/></svg></button>
+    <button type="button" data-share="more" aria-label="სხვა" data-tip="სხვა"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="dot" cx="5.5" cy="12" r="1.7"/><circle class="dot" cx="12" cy="12" r="1.7"/><circle class="dot" cx="18.5" cy="12" r="1.7"/></svg></button>
+  </div>
+  <div class="glass share-toast" id="share-toast" role="status" aria-live="polite"></div>
+</div>
+<div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+
+<div id="loader" role="status" aria-live="polite">
+  <div class="spinner" aria-hidden="true"></div>
+  <div id="loader-text">იტვირთება…</div>
+</div>
+
+<div id="error" hidden role="alert">
+  <h2 id="error-title"></h2>
+  <p id="error-msg"></p>
+</div>
+
+<script>
+  // Shared error display + WebGL 2 capability check (runs before the 3D module).
+  window.__showError = function (title, msg) {
+    var loader = document.getElementById('loader');
+    if (loader) loader.style.display = 'none';
+    document.getElementById('error-title').textContent = title;
+    document.getElementById('error-msg').textContent = msg;
+    document.getElementById('error').hidden = false;
+  };
+  (function () {
+    var ok = false;
+    try {
+      var c = document.createElement('canvas');
+      var gl = window.WebGL2RenderingContext && c.getContext('webgl2');
+      ok = !!gl;
+      if (gl) { var ext = gl.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext(); }
+    } catch (e) { ok = false; }
+    window.__WEBGL_OK__ = ok;
+    if (!ok) {
+      window.__showError(
+        'WebGL ხელმისაწვდომი არ არის',
+        'თქვენი ბრაუზერი ან მოწყობილობა 3D გრაფიკას (WebGL 2) არ უჭერს მხარს, ან ის გამორთულია. გამოიყენეთ Chrome, Edge, Firefox ან Safari-ს განახლებული ვერსია და ჩართეთ აპარატურული აჩქარება (hardware acceleration).'
+      );
+    }
+    // If the library never arrives (offline / blocked CDN), tell the user instead of spinning forever.
+    window.__loadTimer = setTimeout(function () {
+      if (!window.__LIB_LOADED__ && window.__WEBGL_OK__) {
+        window.__showError('ჩატვირთვა ვერ დასრულდა', 'Three.js ბიბლიოთეკა CDN-დან იტვირთება. შეამოწმეთ ინტერნეტ-კავშირი და განაახლეთ გვერდი.');
+      }
+    }, 25000);
+  })();
+</script>
+<script nomodule>
+  window.__showError('ბრაუზერი მოძველებულია', 'ამ გვერდისთვის საჭიროა თანამედროვე ბრაუზერი ES-მოდულების მხარდაჭერით.');
+</script>
+
+<script type="module">
+const loaderEl = document.getElementById('loader');
+const loaderText = document.getElementById('loader-text');
+// Let the loader repaint between build steps (setTimeout fallback keeps going in background tabs).
+const step = (t) => { loaderText.textContent = t; return new Promise(r => { requestAnimationFrame(() => r()); setTimeout(r, 60); }); };
+
+if (window.__WEBGL_OK__) {
+  main().catch((err) => {
+    console.error(err);
+    window.__showError('დაფიქსირდა შეცდომა', 'სცენის აგება ვერ მოხერხდა: ' + (err && err.message ? err.message : err));
+  });
+}
+
+async function main() {
+  await step('ბიბლიოთეკის ჩატვირთვა…');
+  let THREE;
+  try {
+    THREE = await import('three');
+  } catch (e) {
+    console.error(e);
+    window.__showError('Three.js ვერ ჩაიტვირთა', 'ბიბლიოთეკა CDN-დან (cdn.jsdelivr.net) იტვირთება — შეამოწმეთ ინტერნეტ-კავშირი და განაახლეთ გვერდი.');
+    return;
+  }
+  window.__LIB_LOADED__ = true;
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ───────────────────────── Renderer / scene / camera ─────────────────────────
+  const canvas = document.getElementById('c');
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  } catch (e) {
+    window.__showError('WebGL ხელმისაწვდომი არ არის', 'WebGL კონტექსტის შექმნა ვერ მოხერხდა. ჩართეთ აპარატურული აჩქარება ან სცადეთ სხვა ბრაუზერი.');
+    return;
+  }
+  canvas.addEventListener('webglcontextlost', (e) => {
+    e.preventDefault();
+    window.__showError('WebGL კონტექსტი დაიკარგა', 'გრაფიკული დრაივერი გადაიტვირთა. განაახლეთ გვერდი.');
+  });
+
+  const maxPR = Math.min(window.devicePixelRatio || 1, 2);
+  let pixelRatio = maxPR;
+  renderer.setPixelRatio(pixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight, false);
+  renderer.setClearColor(0x000000, 0);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMappingExposure = 1.1;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(28, window.innerWidth / window.innerHeight, 10, 5000);
+  const LOOK_AT = new THREE.Vector3(0, 0, 0);
+
+  // ───────────────────────── Dimensions (millimetres) ─────────────────────────
+  // No published spec: proportions are measured on the straight-on side photos (height ≈ 1.42 × the widest
+  // diameter, neck ≈ 0.61 ×, foot ≈ 0.44 ×); the absolute scale comes from the 12.7 mm bumper pads under the foot.
+  // Everything is therefore an estimate — see README.
+  const VASE_H = 341;                                       // foot bottom → top of the lip
+  const PAD = 2;                                            // clear bumper pads under the foot ring
+  const H = VASE_H + PAD;                                   // overall height
+  const Y0 = -H / 2;                                        // model centred on its height
+  const BY = Y0 + PAD;                                      // foot bottom (model y)
+  const R_MAX = 121;                                        // widest radius, ≈ 65 % of the height up
+  const EXT = { x: R_MAX, zMin: -R_MAX, zMax: R_MAX };      // footprint for the floor shadow
+  const FOOT_R = 53, RECESS = 3.5;                          // foot ring outer radius; depth of the recessed base
+  const PAD_R = 6.35, PAD_AT = 47.5;                        // bumper pad radius and its distance from the axis
+
+  // ───────────────────────── Vase form ─────────────────────────
+  const clamp01 = (x) => Math.min(1, Math.max(0, x));
+  const smooth = (a, b, x) => { const t = clamp01((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  // Outer profile [radius, height above the foot bottom]: foot bevel → ovoid body (widest ≈ 222 mm up) →
+  // rounded shoulder → short, very slightly flared neck. Measured from the side photos (right silhouette edge).
+  const P_OUT = [[53, 0], [54.6, 0.8], [55.7, 2.6], [57.6, 6], [61, 12], [66, 20.5], [72, 31], [80, 47], [88.5, 66],
+    [99, 95], [108, 135], [114, 168], [118.6, 195], [120.6, 222], [119.6, 241], [116, 258], [109.5, 273], [100, 285],
+    [89, 294.5], [80.5, 301], [75.6, 305.6], [73.4, 310.5], [73.1, 318], [73.6, 331], [74, 338.4]];
+  // Thick, flat lip (10 mm) with rounded edges, then the inside: ≈ 9 mm wall, glazed floor.
+  const LIP = { ro: 74, ri: 64, top: VASE_H, rr: 2.6 };
+  const P_IN = [[64, 338.4], [63.6, 331], [63.3, 318], [63.5, 311.5], [65.5, 306], [71, 300.5], [81, 293.5], [92.5, 285],
+    [101, 274], [107, 260], [110.6, 243], [111.8, 222], [110, 195], [105.5, 168], [99.5, 135], [90.5, 97], [80, 68],
+    [71.5, 49], [63.5, 33], [56, 22.5], [48, 16], [36, 13], [18, 12.2], [0, 12]];
+
+  const curve2 = (pts) => new THREE.CatmullRomCurve3(pts.map(([r, h]) => new THREE.Vector3(r, h, 0)), false, 'centripetal');
+  const outerCurve = curve2(P_OUT), innerCurve = curve2(P_IN);
+  // radius of the outer surface at height h (the outer profile rises monotonically up to the lip)
+  const outerSamples = outerCurve.getSpacedPoints(400);
+  function outerR(h) {
+    for (let i = 1; i < outerSamples.length; i++) {
+      const a = outerSamples[i - 1], b = outerSamples[i];
+      if (b.y >= h) return lerp(a.x, b.x, (h - a.y) / (b.y - a.y || 1));
+    }
+    return outerSamples[outerSamples.length - 1].x;
+  }
+
+  // ───────────────────────── Ink-brush glaze (procedural) ─────────────────────────
+  // The outside is one cylindrical texture: u = angle θ round the axis, v = arc length s up the profile from the
+  // foot edge to the inner edge of the lip. Strokes are laid out in surface millimetres and mapped through the
+  // real radius at that s, so a 100 mm stroke is 100 mm long on the neck as well as on the belly. The texture
+  // wraps at θ = 0, so every mark is drawn again one texture width left / right when it crosses that seam.
+  function makeRng(seed) {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6D2B79F5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const C = {   // glossy glazes, sampled from the photos (neutral light, before the studio lighting)
+    glaze: '#e0e1de', glaze2: '#d3d5d3', glaze3: '#ebebe8', line: '#76797c', line2: '#55585c',
+    ink: '#131417', ink2: '#1d1f23', gray: '#64676b', gray2: '#86898d', gray3: '#a9acaf', umber: '#4a4440',
+    bisque: '#ebe7df', bisque2: '#f2efe9'
+  };
+  function shade(hex, k) {             // k ∈ [-1, 1]: darker … lighter
+    const n = parseInt(hex.slice(1), 16);
+    let r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+    const tgt = k > 0 ? 255 : 0, a = Math.abs(k);
+    r += (tgt - r) * a; g += (tgt - g) * a; b += (tgt - b) * a;
+    return `rgb(${r | 0},${g | 0},${b | 0})`;
+  }
+  const TAU = Math.PI * 2;
+  const pick = (rng, list) => list[Math.floor(rng() * list.length)];
+
+  // Height canvas → normal map (1-2-1 blur each way, x wraps round the seam when `wrap`).
+  function normalFromHeight(hx, w, h, gain, wrap) {
+    const hd = hx.getImageData(0, 0, w, h).data;
+    const hs = new Float32Array(w * h), ht = new Float32Array(w * h);
+    for (let i = 0; i < hs.length; i++) hs[i] = hd[i * 4];
+    const xm = (x) => (wrap ? (x + w) % w : Math.min(Math.max(x, 0), w - 1));
+    for (let y = 0; y < h; y++) for (let x = 0, r = y * w; x < w; x++) ht[r + x] = (hs[r + xm(x - 1)] + 2 * hs[r + x] + hs[r + xm(x + 1)]) * 0.25;
+    for (let y = 0; y < h; y++) for (let x = 0, r = y * w; x < w; x++) hs[r + x] = (ht[Math.max(y - 1, 0) * w + x] + 2 * ht[r + x] + ht[Math.min(y + 1, h - 1) * w + x]) * 0.25;
+    const nc = document.createElement('canvas');
+    nc.width = w; nc.height = h;
+    const ncx = nc.getContext('2d');
+    const img = ncx.createImageData(w, h), d = img.data;
+    for (let y = 0; y < h; y++) {
+      const y0 = Math.max(y - 1, 0) * w, y1 = Math.min(y + 1, h - 1) * w, row = y * w;
+      for (let x = 0; x < w; x++) {
+        const nx = -(hs[row + xm(x + 1)] - hs[row + xm(x - 1)]) * 0.5 * gain / 255, ny = (hs[y1 + x] - hs[y0 + x]) * 0.5 * gain / 255;
+        const l = Math.hypot(nx, ny, 1), j = (row + x) * 4;
+        d[j] = (nx / l * 0.5 + 0.5) * 255; d[j + 1] = (ny / l * 0.5 + 0.5) * 255; d[j + 2] = (1 / l * 0.5 + 0.5) * 255; d[j + 3] = 255;
+      }
+    }
+    ncx.putImageData(img, 0, 0);
+    return nc;
+  }
+  function canvasTextures(col, nc) {
+    const map = new THREE.CanvasTexture(col);
+    map.colorSpace = THREE.SRGBColorSpace;
+    const normalMap = new THREE.CanvasTexture(nc);
+    for (const t of [map, normalMap]) { t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.userData.mimeType = 'image/jpeg'; }
+    return { map, normalMap };
+  }
+
+  // plan(api) draws the marks; rho(s) = radius at arc length s; S = arc length at the top of the texture.
+  function paintOuter(TW, TH, S, rho, seed, plan) {
+    const rng = makeRng(seed);
+    const col = document.createElement('canvas'), hgt = document.createElement('canvas');
+    col.width = TW; col.height = TH;
+    hgt.width = TW / 2; hgt.height = TH / 2;                  // relief at half resolution is plenty under gloss
+    const cpu = { willReadFrequently: true };                // CPU raster: far faster than GPU canvas for thousands of lines
+    const cx = col.getContext('2d', cpu), hx = hgt.getContext('2d', cpu);
+    cx.fillStyle = C.glaze; cx.fillRect(0, 0, TW, TH);
+    hx.fillStyle = '#000'; hx.fillRect(0, 0, TW, TH);
+    hx.scale(0.5, 0.5);
+    const kv = TH / S;                                        // px per mm along s
+    const X = (th) => th / TAU * TW, Y = (s) => (1 - s / S) * TH;
+    const toPx = (th0, s0, lx, ly) => { const s = s0 + ly; return [X(th0 + lx / Math.max(rho(s), 8)), Y(s)]; };
+    // draw `fn(g)` on a context once per seam copy that the marks' x-range [x0, x1] reaches
+    function wrapped(g, x0, x1, fn) {
+      for (const off of [-TW, 0, TW]) {
+        if (x1 + off < 0 || x0 + off > TW) continue;
+        if (off) { g.save(); g.translate(off, 0); fn(); g.restore(); } else fn();
+      }
+    }
+    function polyline(g, pts) {
+      let a = Infinity, b = -Infinity;
+      for (const p of pts) { if (p[0] < a) a = p[0]; if (p[0] > b) b = p[0]; }
+      wrapped(g, a, b, () => {
+        g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
+        for (let i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]);
+        g.stroke();
+      });
+    }
+
+    // A horizontal brush sweep made of fine bristle rows. Both ends taper to a point (the tip sits anywhere between
+    // the stroke's top and bottom edge) and split into a few flame-like fingers; near the tips the bristles break up
+    // (dry brush). The top / bottom edges wave gently. Rows overlap slightly so the body reads as one glossy sweep.
+    function stroke(th0, s0, len, hgt, color, o = {}) {
+      th0 = ((th0 % TAU) + TAU) % TAU;
+      const alpha = o.alpha ?? 0.94, dry = o.dry ?? 0.5, relief = o.relief ?? 1, streak = o.streak ?? 0.08;
+      const tilt = o.tilt ?? (rng() - 0.5) * 0.03, bend = o.bend ?? (rng() - 0.5) * 0.2;
+      const tip = [o.tipL ?? 0.16 + rng() * 0.24, o.tipR ?? 0.18 + rng() * 0.3];      // taper length / len
+      const ty = [o.yL ?? (rng() - 0.5) * 0.8, o.yR ?? (rng() - 0.5) * 0.8];           // tip height (−0.5 … 0.5)
+      const fing = o.fingers ?? 0.32;
+      const fq = [1.6 + rng() * 2.8, 1.6 + rng() * 2.8], fp = [rng() * TAU, rng() * TAU];
+      const wob = (o.wob ?? 0.07) * hgt, wf = 0.6 + rng() * 1.4, wp = rng() * TAU;
+      const sq = rng() * TAU;
+      const n = Math.max(4, Math.round(hgt / 0.34));
+      const lw = Math.max(0.9, (hgt / n) * kv * 1.4);
+      cx.lineCap = 'butt'; hx.lineCap = 'butt';
+      for (let i = 0; i < n; i++) {
+        const yy = (i + 0.5) / n - 0.5;
+        const end = (k) => {
+          const d = Math.abs(yy - ty[k]) / (0.5 + Math.abs(ty[k]));
+          const f = Math.pow(0.5 + 0.5 * Math.sin(TAU * fq[k] * yy + fp[k]), 2);
+          return tip[k] * len * (Math.pow(d, 1.25) * (1 - fing * 0.5) + fing * f * (0.2 + 0.8 * d));
+        };
+        const xl = -len / 2 + end(0) + Math.pow(rng(), 3) * dry * len * 0.07;
+        const xr = len / 2 - end(1) - Math.pow(rng(), 3) * dry * len * 0.07;
+        if (xr - xl < 1.5) continue;
+        const ly = yy * hgt;
+        // split the row into short pieces; towards the tips some are skipped (dry brush)
+        const seg = 2.5 + rng() * 3, pieces = [];
+        let cur = null;
+        for (let x = xl; x < xr; x += seg) {
+          const x2 = Math.min(x + seg, xr);
+          const endness = Math.abs((x + x2) / 2) / (len / 2);
+          const skip = rng() < dry * 0.6 * smooth(0.55, 1.02, endness) + 0.008 * dry;
+          if (skip) { cur = null; continue; }
+          if (!cur) { cur = [x]; pieces.push(cur); }
+          cur.push(x2);
+        }
+        const rowAlpha = alpha * (0.88 + 0.12 * rng());
+        cx.strokeStyle = shade(color, (rng() - 0.5) * streak + 0.5 * streak * Math.sin(yy * 41 + sq));
+        cx.lineWidth = lw * (0.9 + rng() * 0.25);
+        hx.lineWidth = cx.lineWidth;
+        const yAt = (x) => ly + tilt * x + bend * hgt * Math.pow(2 * x / len, 2) + wob * 2 * yy * Math.sin(TAU * wf * x / len + wp);
+        for (const pc of pieces) {
+          const pts = pc.map(x => toPx(th0, s0, x, yAt(x)));
+          const mid = (pc[0] + pc[pc.length - 1]) / 2, endness = Math.abs(mid) / (len / 2);
+          cx.globalAlpha = rowAlpha * (1 - 0.3 * dry * smooth(0.65, 1, endness));
+          polyline(cx, pts);
+          hx.globalAlpha = relief * (0.04 + 0.16 * smooth(0.6, 1, endness) + 0.1 * Math.pow(2 * Math.abs(yy), 6));
+          hx.strokeStyle = '#fff';
+          polyline(hx, pts);
+        }
+      }
+      cx.globalAlpha = hx.globalAlpha = 1;
+    }
+    // Fine spun line (the light brushed-on glaze shows faint grey rings everywhere).
+    function spin(th0, s0, len, w, color, alpha) {
+      th0 = ((th0 % TAU) + TAU) % TAU;
+      const pts = [], ph = rng() * TAU, wav = 0.15 + rng() * 0.35;
+      cx.strokeStyle = color; cx.lineWidth = Math.max(0.8, w * kv); cx.lineCap = 'round';
+      cx.globalAlpha = alpha;
+      let gap = false;
+      for (let x = -len / 2; x <= len / 2; x += 3) {
+        const p = toPx(th0, s0, x, wav * Math.sin(x / 23 + ph));
+        if (!gap) pts.push(p);
+        if (rng() < 0.05) { if (pts.length > 1) polyline(cx, pts.splice(0)); else pts.length = 0; gap = true; }
+        else gap = false;
+      }
+      if (pts.length > 1) polyline(cx, pts);
+      cx.globalAlpha = 1;
+    }
+    function dot(th, s, r, color, alpha) {
+      const [px, py] = [X(th), Y(s)];
+      cx.globalAlpha = alpha; cx.fillStyle = color;
+      wrapped(cx, px - 4, px + 4, () => { cx.beginPath(); cx.arc(px, py, Math.max(0.6, r * kv), 0, TAU); cx.fill(); });
+      cx.globalAlpha = 1;
+    }
+    plan({ stroke, spin, dot, rng });
+    return canvasTextures(col, normalFromHeight(hx, TW / 2, TH / 2, 2.4, true));
+  }
+
+  // The painted design, by height h on the body (sAt converts to texture arc length).
+  // θ = π/2 faces the camera at yaw 0: the black column is centred there, leaning slightly right as it rises.
+  const BAND = Math.PI / 2;
+  const bandAt = (h) => BAND - 0.24 * (h - 150) / 120 + 0.05 * Math.sin(h / 37);
+  const coreAt = (h) => 0.64 + 0.12 * (1 - smooth(25, 175, h));         // half-width of the black core (radians)
+  function planOuter(sAt, sLipIn, S) {
+    return ({ stroke, spin, dot, rng }) => {
+      const hRand = (a, b) => a + rng() * (b - a);
+      // 1. faint, broad unevenness of the white glaze
+      for (let i = 0; i < 26; i++) {
+        stroke(rng() * TAU, sAt(hRand(20, 330)), 160 + rng() * 260, 18 + rng() * 26, pick(rng, [C.glaze2, C.glaze3, C.glaze2]), { alpha: 0.35, dry: 0.9, streak: 0.04, relief: 0.2 });
+      }
+      // 2. spun grey hairlines: loose single lines plus groups of parallel bristle lines, densest on the shoulder and neck
+      const top = sLipIn + 3;
+      for (let i = 0; i < 2600; i++) {
+        let s = rng() * top;
+        if (s < sAt(220) && rng() < 0.35) s = sAt(220) + rng() * (top - sAt(220));
+        spin(rng() * TAU, s, 20 + 240 * rng() * rng(), 0.1 + rng() * 0.16, rng() < 0.75 ? C.line : C.line2, 0.07 + rng() * 0.22);
+      }
+      for (let g = 0; g < 420; g++) {
+        let s0 = rng() * top;
+        if (s0 < sAt(220) && rng() < 0.4) s0 = sAt(220) + rng() * (top - sAt(220));
+        const th0 = rng() * TAU, len = 60 + rng() * 260, k = 4 + Math.floor(rng() * 9), a = 0.08 + rng() * 0.15;
+        for (let j = 0; j < k; j++) {
+          spin(th0 + (rng() - 0.5) * 0.12, s0 + j * (0.4 + rng() * 0.8), len * (0.6 + rng() * 0.5), 0.1 + rng() * 0.14, C.line, a * (0.6 + rng() * 0.6));
+        }
+      }
+      // 3. soft grey washes (the faint smoky patch on the white side, light greys round the band)
+      for (let i = 0; i < 9; i++) {
+        stroke(BAND + Math.PI + 0.25 + (rng() - 0.5) * 0.5, sAt(hRand(105, 235)), 70 + rng() * 90, 16 + rng() * 18, C.gray3, { alpha: 0.12, dry: 0.85, streak: 0.1, relief: 0.15 });
+      }
+      for (let i = 0; i < 18; i++) {
+        stroke(rng() * TAU, sAt(hRand(15, 300)), 90 + rng() * 200, 10 + rng() * 22, pick(rng, [C.gray3, C.gray2]), { alpha: 0.08 + rng() * 0.08, dry: 0.85, relief: 0.15 });
+      }
+
+      // 4. the ink column: stacked horizontal sweeps with pointed, feathered ends — grey at the ragged edges,
+      //    black in the core, the edges zig-zagging from row to row
+      const rows = [];
+      for (let h = 12; h <= 262; h += 9 + rng() * 4.5) rows.push(h);
+      const greys = (h, under) => {
+        for (const side of [-1, 1]) {
+          const nG = 1 + (rng() < 0.45);
+          for (let k = 0; k < nG; k++) {
+            if ((rng() < 0.45) !== under) continue;
+            const r = outerR(h), edge = bandAt(h) + side * (coreAt(h) + (rng() - 0.45) * 0.3);
+            const len = 80 + rng() * 150, inset = 25 + rng() * 40;
+            const c = pick(rng, [C.gray, C.gray2, C.gray3, C.gray3]);
+            stroke(edge + side * (len / 2 - inset) / r, sAt(h + (rng() - 0.5) * 9), len, 7 + rng() * 10, c,
+              { alpha: 0.4 + rng() * 0.35, dry: 0.75, streak: 0.18, tipL: 0.25 + rng() * 0.25, tipR: 0.3 + rng() * 0.25 });
+          }
+        }
+      };
+      for (const h of rows) greys(h, true);
+      for (const h of rows) {
+        const r = outerR(h), c = bandAt(h), core = coreAt(h);
+        const zl = core + (rng() - 0.5) * 0.5, zr = core + (rng() - 0.5) * 0.5;
+        const passes = rng() < 0.45 ? 2 : 1;
+        for (let p = 0; p < passes; p++) {
+          const a = zl * (1 - 0.25 * p * rng()), b = zr * (1 - 0.25 * p * rng());
+          stroke(c + (b - a) / 2, sAt(h + (rng() - 0.5) * 5), (a + b) * r * (h < 120 ? 1.02 : 1.14), 12 + rng() * 10, rng() < 0.75 ? C.ink : C.ink2,
+            { alpha: 0.96, dry: 0.45, streak: 0.06 });
+        }
+        // small loose flames just past the left / right edge
+        for (const side of [-1, 1]) if (rng() < 0.18) {
+          const len = 40 + rng() * 50, at = c + side * ((side < 0 ? zl : zr) + (4 + rng() * 18 + len / 2) / r);
+          stroke(at, sAt(h + (rng() - 0.5) * 8), len, 3 + rng() * 4, C.ink, { alpha: 0.9, dry: 0.6, streak: 0.06, tipL: 0.35, tipR: 0.45 });
+        }
+      }
+      for (const h of rows) greys(h, false);
+      // the band's top: a thin brown-grey sweep (thinned ink) above the first black stroke
+      stroke(bandAt(268) + 0.08, sAt(270), (coreAt(268) * 2 + 0.25) * outerR(270), 8, C.umber, { alpha: 0.88, dry: 0.6, yL: 0.3, yR: 0.2 });
+      stroke(bandAt(272) - 0.12, sAt(275), 0.95 * outerR(274), 4, C.gray, { alpha: 0.5, dry: 0.8 });
+      // low on the belly the black wraps a little further round, with grey streaks beside it
+      for (let h = 5; h < 34; h += 6 + rng() * 4) {
+        const r = outerR(h);
+        stroke(bandAt(h) + 0.12 + (rng() - 0.5) * 0.3, sAt(h), (coreAt(h) * 2 - 0.25 + rng() * 0.3) * r, 8 + rng() * 6, C.ink, { alpha: 0.92, dry: 0.5, streak: 0.06 });
+        stroke(rng() * TAU, sAt(h), 60 + rng() * 120, 4 + rng() * 6, pick(rng, [C.gray2, C.gray3]), { alpha: 0.25, dry: 0.85 });
+      }
+      // 5. a few pinholes / specks in the glaze
+      for (let i = 0; i < 260; i++) dot(rng() * TAU, rng() * top, 0.18 + rng() * 0.22, rng() < 0.7 ? '#4d4f52' : '#ffffff', 0.2 + rng() * 0.3);
+      // 6. the unglazed foot edge: bisque below a ragged glaze line
+      for (let th = 0; th < TAU; th += 0.012) {
+        stroke(th, 0.6 + rng() * 0.8, 6 + rng() * 10, 1.2 + rng() * 1.6, C.bisque, { alpha: 1, dry: 0.4, relief: 0.6, tilt: 0, bend: 0, fingers: 0.2 });
+      }
+      void S;
+    };
+  }
+
+  // Foot: unglazed bisque. Disc texture centred on the axis (radius in mm), recessed base with faint throwing rings,
+  // rough foot ring with crumbs of glaze along its outer edge.
+  function paintFoot(size, RF, seed) {
+    const rng = makeRng(seed);
+    const R = size / 2, k = R / RF;
+    const col = document.createElement('canvas'), hgt = document.createElement('canvas');
+    col.width = col.height = hgt.width = hgt.height = size;
+    const cpu = { willReadFrequently: true };
+    const cx = col.getContext('2d', cpu), hx = hgt.getContext('2d', cpu);
+    cx.fillStyle = C.bisque; cx.fillRect(0, 0, size, size);
+    hx.fillStyle = '#404040'; hx.fillRect(0, 0, size, size);
+    const circle = (g, r, w, style, a) => { g.globalAlpha = a; g.strokeStyle = style; g.lineWidth = w; g.beginPath(); g.arc(R, R, r * k, 0, TAU); g.stroke(); };
+    // recess: smoother, a touch lighter, faint concentric rings
+    cx.fillStyle = C.bisque2; cx.beginPath(); cx.arc(R, R, 44.6 * k, 0, TAU); cx.fill();
+    for (let i = 0; i < 70; i++) circle(cx, rng() * 44, 0.6 + rng() * 1.6, rng() < 0.6 ? '#b9b3a8' : '#ffffff', 0.04 + rng() * 0.06);
+    // ring: rough, with chips and glaze crumbs near the edge
+    for (let i = 0; i < 2600; i++) {
+      const th = rng() * TAU, r = 44.8 + rng() * 8.6, px = R + r * k * Math.cos(th), py = R - r * k * Math.sin(th);
+      const big = r > 50.5 && rng() < 0.25, rr = (big ? 0.4 + rng() * 0.9 : 0.12 + rng() * 0.3) * k;
+      cx.globalAlpha = big ? 0.9 : 0.25 + rng() * 0.4;
+      cx.fillStyle = big ? '#f6f5f2' : (rng() < 0.55 ? '#d2ccc1' : '#fbfaf7');
+      cx.beginPath(); cx.ellipse(px, py, rr * (1 + rng()), rr, th, 0, TAU); cx.fill();
+      hx.globalAlpha = big ? 0.8 : 0.35; hx.fillStyle = rng() < 0.5 || big ? '#ffffff' : '#000000';
+      hx.beginPath(); hx.ellipse(px, py, rr * (1 + rng()), rr, th, 0, TAU); hx.fill();
+    }
+    circle(cx, 44.9, 1.5 * k / 10, '#a69f93', 0.35);
+    cx.globalAlpha = hx.globalAlpha = 1;
+    return canvasTextures(col, normalFromHeight(hx, size, size, 3, false));
+  }
+
+  function makeBlobTexture() {
+    const s = 256, c = document.createElement('canvas');
+    c.width = c.height = s;
+    const x = c.getContext('2d');
+    const g = x.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+    g.addColorStop(0, 'rgba(0,0,0,1)');
+    g.addColorStop(0.3, 'rgba(0,0,0,0.7)');
+    g.addColorStop(0.65, 'rgba(0,0,0,0.22)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = g; x.fillRect(0, 0, s, s);
+    return new THREE.CanvasTexture(c);
+  }
+
+  // ───────────────────────── Studio lighting environment ─────────────────────────
+  await step('სტუდიური განათება…');
+  function buildStudioEnvironment() {
+    const env = new THREE.Scene();
+    const sg = new THREE.SphereGeometry(50, 64, 32);
+    const top = new THREE.Color(0x4a4e57), mid = new THREE.Color(0x24262b), bot = new THREE.Color(0x0b0b0c);
+    const cols = [], pos = sg.attributes.position, tmp = new THREE.Color();
+    for (let i = 0; i < pos.count; i++) {
+      const t = pos.getY(i) / 50;
+      tmp.copy(mid).lerp(t > 0 ? top : bot, Math.abs(t));
+      cols.push(tmp.r, tmp.g, tmp.b);
+    }
+    sg.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+    env.add(new THREE.Mesh(sg, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
+
+    const panel = (w, h, k, p, tint = 0xffffff) => {
+      const m = new THREE.Mesh(
+        new THREE.PlaneGeometry(w, h),
+        new THREE.MeshBasicMaterial({ color: new THREE.Color(tint).multiplyScalar(k), side: THREE.DoubleSide })
+      );
+      m.position.set(...p);
+      m.lookAt(0, 0, 0);
+      env.add(m);
+    };
+    panel(6, 5, 3.2, [-5, 5, 5], 0xfff6ec);   // key softbox, upper-left front
+    panel(9, 4, 1.4, [0, 8, 0]);              // overhead
+    panel(2.4, 7, 1.7, [-8, 0.5, 1]);         // left strip → soft edge highlight on the glaze
+    panel(2.4, 7, 1.4, [8, 0.5, -1.5], 0xeef3ff); // right strip
+    for (const [x, z] of [[-2.5, 3], [1.5, 4.5], [3.5, 1], [-0.5, 5.5]]) panel(0.32, 0.32, 14, [x, 8, z]);   // ceiling spots → small glints
+    panel(7, 2.2, 2.4, [0, 1.5, -8], 0xdfe8ff);    // rear rim
+    panel(9, 2, 0.7, [0, -2.5, 8]);           // low front fill
+    panel(8, 5, 0.95, [3, 8, 6.5]);        // large frontal softbox (lights faces turned to camera)
+    panel(14, 14, 0.08, [0, -8, 0]);          // floor bounce
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const rt = pmrem.fromScene(env, 0.015);
+    pmrem.dispose();
+    env.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
+    return rt.texture;
+  }
+  scene.environment = buildStudioEnvironment();
+  scene.environmentIntensity = 1.25;
+
+  const key = new THREE.DirectionalLight(0xfff4ea, 3.4);
+  key.position.set(-260, 380, 340);
+  const rim = new THREE.DirectionalLight(0xdfe7ff, 2.4);
+  rim.position.set(320, 160, -380);
+  const fill = new THREE.HemisphereLight(0xc4c9d4, 0x111113, 0.9);
+  scene.add(key, rim, fill);
+
+  // Zoommer mode: warm orange bounce/rim lights, faded in and out with the backdrop
+  // (cheaper and smoother than swapping the environment map).
+  const zHemi = new THREE.HemisphereLight(0xffd9bf, 0xff7a3a, 0);
+  const zWarmL = new THREE.DirectionalLight(0xff6a1f, 0);
+  zWarmL.position.set(-380, 60, -120);
+  const zWarmR = new THREE.DirectionalLight(0xff8a45, 0);
+  zWarmR.position.set(400, -40, 160);
+  scene.add(zHemi, zWarmL, zWarmR);
+  const RIM_BASE = rim.intensity;
+  const themeLight = { mix: 0, target: 0 };
+  // Warm Zoommer lights at mix m (0 … 1) — gentler than on the matte bowl: the glossy white glaze picks up colour fast.
+  function setThemeLight(m) {
+    zHemi.intensity = 0.3 * m; zWarmL.intensity = 1.0 * m; zWarmR.intensity = 0.6 * m;
+    rim.intensity = RIM_BASE * (1 - 0.4 * m);
+  }
+
+  // ───────────────────────── Vase geometry ─────────────────────────
+  await step('მოდელის აგება…');
+  // One closed lathe shell as a grid of rings (M points round each): recessed base → foot ring → outer wall →
+  // rounded lip → inner wall → floor. Normals come from the whole grid, so the separately textured foot, outside
+  // and inside meshes meet without a shading seam.
+  const isSmall = Math.min(window.innerWidth, window.innerHeight) < 700;
+  const M = isSmall ? 160 : 240, NT_OUT = isSmall ? 150 : 210, NT_IN = isSmall ? 70 : 100, K = 8;
+  const TH = Array.from({ length: M }, (_, j) => j / M * TAU);
+  const rows = [];                                            // { r, y (above the foot bottom), n?: forced normal }
+  // base: recess centre → recess edge → inner foot wall → flat foot ring (unglazed)
+  rows.push({ r: 0, y: RECESS, n: new THREE.Vector3(0, -1, 0) });
+  for (const [r, y] of [[12, RECESS], [24, RECESS], [36, RECESS], [42.6, RECESS], [44.1, RECESS - 0.3], [44.9, RECESS - 1.1],
+    [45.3, 1.2], [45.8, 0.35], [46.8, 0], [51.6, 0]]) rows.push({ r, y });
+  const iOut0 = rows.length;
+  for (const p of outerCurve.getSpacedPoints(NT_OUT)) rows.push({ r: p.x, y: p.y });
+  {                                                            // lip: quarter round, flat top, quarter round
+    const { ro, ri, top, rr } = LIP;
+    for (let k = 1; k <= K; k++) { const a = k / K * Math.PI / 2; rows.push({ r: ro - rr + rr * Math.cos(a), y: top - rr + rr * Math.sin(a) }); }
+    for (let k = 1; k < 4; k++) rows.push({ r: lerp(ro - rr, ri + rr, k / 4), y: top });
+    for (let k = 0; k <= K; k++) { const a = Math.PI / 2 + k / K * Math.PI / 2; rows.push({ r: ri + rr + rr * Math.cos(a), y: top - rr + rr * Math.sin(a) }); }
+  }
+  const iLip = rows.length - 1;                                // inner edge of the lip = end of the glazed outside
+  for (const p of innerCurve.getSpacedPoints(NT_IN).slice(1)) rows.push({ r: p.x, y: p.y });
+  rows[rows.length - 1].n = new THREE.Vector3(0, 1, 0);
+  const NR = rows.length;
+  const pos = rows.map(({ r, y }) => TH.map(th => new THREE.Vector3(r * Math.cos(th), BY + y, r * Math.sin(th))));
+
+  // Smooth normals on the grid (central differences; forced at the two poles).
+  const normals = rows.map((row, i) => pos[i].map((p, j) => {
+    if (row.n) return row.n;
+    const a = pos[Math.max(i - 1, 0)][j], b = pos[Math.min(i + 1, NR - 1)][j];
+    const tr = b.clone().sub(a), ta = pos[i][(j + 1) % M].clone().sub(pos[i][(j + M - 1) % M]);
+    return tr.cross(ta).normalize();
+  }));
+  // Arc length up the profile from the foot edge (outer texture), radius and height per row.
+  const sRow = new Float32Array(NR);
+  for (let i = iOut0 + 1; i < NR; i++) sRow[i] = sRow[i - 1] + Math.hypot(rows[i].r - rows[i - 1].r, rows[i].y - rows[i - 1].y);
+  const S_OUT = sRow[iLip];
+  function tableFn(xs, ys) {                                   // piecewise-linear lookup over increasing xs
+    return (x) => {
+      if (x <= xs[0]) return ys[0];
+      for (let k = 1; k < xs.length; k++) if (xs[k] >= x) return lerp(ys[k - 1], ys[k], (x - xs[k - 1]) / (xs[k] - xs[k - 1] || 1));
+      return ys[ys.length - 1];
+    };
+  }
+  const outIdx = Array.from({ length: iLip - iOut0 + 1 }, (_, k) => iOut0 + k);
+  const rhoOut = tableFn(outIdx.map(i => sRow[i]), outIdx.map(i => rows[i].r));
+  const bodyIdx = outIdx.filter(i => i <= iOut0 + NT_OUT);
+  const sAt = tableFn(bodyIdx.map(i => rows[i].y), bodyIdx.map(i => sRow[i]));
+
+  // uvMode 'cyl': u = θ / 2π (one extra seam column), v = s / S; 'disc': centred disc of radius RF (mm); none: no uv.
+  function gridGeometry(i0, i1, uvMode, S) {
+    const MC = uvMode === 'cyl' ? M + 1 : M;
+    const n = i1 - i0 + 1, P = new Float32Array(n * MC * 3), N = new Float32Array(n * MC * 3), uv = new Float32Array(n * MC * 2), idx = [];
+    for (let i = 0; i < n; i++) for (let jj = 0; jj < MC; jj++) {
+      const j = jj % M, q = i * MC + jj, p = pos[i0 + i][j], nn = normals[i0 + i][j], th = TH[j];
+      P.set([p.x, p.y, p.z], q * 3); N.set([nn.x, nn.y, nn.z], q * 3);
+      if (uvMode === 'cyl') { uv[q * 2] = jj / M; uv[q * 2 + 1] = (sRow[i0 + i] - sRow[iOut0]) / S; }
+      else if (uvMode === 'disc') { const f = rows[i0 + i].r / S; uv[q * 2] = 0.5 + 0.5 * f * Math.cos(th); uv[q * 2 + 1] = 0.5 + 0.5 * f * Math.sin(th); }
+    }
+    for (let i = 0; i < n - 1; i++) for (let jj = 0; jj < (uvMode === 'cyl' ? M : M); jj++) {
+      const a = i * MC + jj, b = i * MC + (jj + 1) % MC, c = a + MC, d = b + MC;
+      idx.push(a, c, b, b, c, d);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(P, 3));
+    g.setAttribute('normal', new THREE.BufferAttribute(N, 3));
+    if (uvMode) g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    return g;
+  }
+
+  // ───────────────────────── Materials ─────────────────────────
+  await step('მოხატულობის აგება…');
+  const TEX_W = isSmall ? 2048 : 4096;
+  const paintOut = paintOuter(TEX_W, TEX_W / 2, S_OUT, rhoOut, 20261015, planOuter(sAt, S_OUT, S_OUT));
+  const paintFt = paintFoot(isSmall ? 768 : 1024, FOOT_R, 1015);
+  const mats = {
+    // glossy clear glaze over the brushed white and the ink: clearcoat gives the sharp window-like highlights
+    outer: new THREE.MeshPhysicalMaterial({
+      map: paintOut.map, normalMap: paintOut.normalMap, normalScale: new THREE.Vector2(0.35, 0.35),
+      roughness: 0.2, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.06
+    }),
+    inner: new THREE.MeshPhysicalMaterial({ color: 0xd5dadd, roughness: 0.42, metalness: 0, clearcoat: 0.25, clearcoatRoughness: 0.3 }),
+    foot: new THREE.MeshStandardMaterial({ map: paintFt.map, normalMap: paintFt.normalMap, normalScale: new THREE.Vector2(0.8, 0.8), roughness: 0.95, metalness: 0 }),
+    pad: new THREE.MeshPhysicalMaterial({ color: 0xe6e6e1, roughness: 0.32, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.2 })
+  };
+  const PALETTES = { ink: { name: 'Ink brushstroke' } };
+  function applyPalette(id) { document.getElementById('color-name').textContent = PALETTES[id].name; }
+  applyPalette('ink');
+
+  // ───────────────────────── Model ─────────────────────────
+  // phone = the rotating product group (name shared with the viewer code below): vase_foot, vase_outer, vase_inner, pads.
+  const pivot = new THREE.Group();   // floating bob
+  const phone = new THREE.Group();
+  pivot.add(phone);
+  scene.add(pivot);
+  const named = (o, name) => { o.name = name; return o; };
+  const vase = named(new THREE.Group(), 'vase');
+  phone.add(vase);
+  vase.add(named(new THREE.Mesh(gridGeometry(0, iOut0, 'disc', FOOT_R), mats.foot), 'vase_foot'));
+  vase.add(named(new THREE.Mesh(gridGeometry(iOut0, iLip, 'cyl', S_OUT), mats.outer), 'vase_outer'));
+  vase.add(named(new THREE.Mesh(gridGeometry(iLip, NR - 1, null), mats.inner), 'vase_inner'));
+  {
+    // three clear bumper pads on the foot ring (low domes)
+    const prof = [[0, -PAD], [PAD_R * 0.62, -PAD * 0.9], [PAD_R * 0.86, -PAD * 0.62], [PAD_R * 0.98, -PAD * 0.25], [PAD_R, 0]];
+    const g = new THREE.LatheGeometry(prof.map(([r, y]) => new THREE.Vector2(r, y)), 32);
+    for (const a of [0.35, 0.35 + TAU / 3, 0.35 + 2 * TAU / 3]) {
+      const m = new THREE.Mesh(g, mats.pad);
+      m.position.set(PAD_AT * Math.cos(a), BY, PAD_AT * Math.sin(a));
+      vase.add(named(m, 'bumper_pad'));
+    }
+  }
+
+  // GLB export of the product (used to produce the downloadable model file).
+  window.__viewer = {
+    async exportGLB() {
+      const { GLTFExporter } = await import('three/addons/exporters/GLTFExporter.js');
+      const root = new THREE.Group();
+      root.name = 'ceramic_art_vase';
+      const v = vase.clone();
+      v.position.y = -Y0;                                        // pads on y = 0, millimetres → metres below
+      root.add(v);
+      root.scale.setScalar(0.001);
+      return new GLTFExporter().parseAsync(root, { binary: true, maxTextureSize: 4096 });
+    }
+  };
+
+  // ───────────────────────── Soft floor shadow ─────────────────────────
+  const FLOOR_Y = -H / 2 - 16;
+  const blobTex = makeBlobTexture();
+  const shadowGeo = new THREE.PlaneGeometry(1, 1);
+  shadowGeo.rotateX(-Math.PI / 2);
+  const shadowSoft = new THREE.Mesh(shadowGeo, new THREE.MeshBasicMaterial({ color: 0x000000, map: blobTex, transparent: true, depthWrite: false, opacity: 0.5, toneMapped: false }));
+  const shadowCore = new THREE.Mesh(shadowGeo, new THREE.MeshBasicMaterial({ color: 0x000000, map: blobTex, transparent: true, depthWrite: false, opacity: 0.5, toneMapped: false }));
+  shadowSoft.renderOrder = 1; shadowCore.renderOrder = 2;
+  scene.add(shadowSoft, shadowCore);
+
+  const bboxCorners = [];
+  for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const z of [EXT.zMin, EXT.zMax]) bboxCorners.push(new THREE.Vector3(sx * EXT.x, sy * H / 2, z));
+  const vTmp = new THREE.Vector3();
+  function updateShadow() {
+    phone.updateWorldMatrix(true, false);
+    let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity, minY = Infinity;
+    for (const c of bboxCorners) {
+      vTmp.copy(c).applyMatrix4(phone.matrixWorld);
+      minX = Math.min(minX, vTmp.x); maxX = Math.max(maxX, vTmp.x);
+      minZ = Math.min(minZ, vTmp.z); maxZ = Math.max(maxZ, vTmp.z);
+      minY = Math.min(minY, vTmp.y);
+    }
+    const cx = (minX + maxX) / 2, cz = (minZ + maxZ) / 2, sx = maxX - minX, sz = maxZ - minZ;
+    const gap = Math.max(minY - FLOOR_Y, 0);
+    shadowSoft.position.set(cx, FLOOR_Y, cz);
+    shadowSoft.scale.set(sx * 1.5 + 70 + gap * 0.6, 1, sz * 1.5 + 60 + gap * 0.6);
+    shadowSoft.material.opacity = THREE.MathUtils.clamp(0.42 - gap * 0.0012, 0.22, 0.42);
+    shadowCore.position.set(cx, FLOOR_Y + 0.05, cz);
+    shadowCore.scale.set(sx * 1.1 + 14 + gap * 0.25, 1, sz * 1.1 + 12 + gap * 0.25);
+    shadowCore.material.opacity = THREE.MathUtils.clamp(0.62 - gap * 0.006, 0.12, 0.62);
+  }
+
+  // ───────────────────────── Camera framing ─────────────────────────
+  // Work area = the visible scene above the bottom controls (bar and, on narrow screens, the stacked theme switch).
+  // On narrow screens the centred title stack would meet the top-left heading, so the area starts below it.
+  const NARROW = 720;
+  function workArea() {
+    const dockTop = document.getElementById('dock').getBoundingClientRect().top;
+    const th = document.getElementById('theme');
+    const themeTop = th.classList.contains('placed') ? th.getBoundingClientRect().top : Infinity;
+    const bottom = Math.max(160, Math.min(dockTop, themeTop) - 16);
+    const top = window.innerWidth < NARROW ? Math.min(document.querySelector('header').getBoundingClientRect().bottom + 8, bottom - 140) : 0;
+    return { top, bottom, height: bottom - top };
+  }
+  // At zoom 0 the vase (front view) fills ~90 % of the work-area height, unless the screen is too narrow for its
+  // width; lookFactor shifts the aim point so that centre holds at every zoom distance.
+  const PHONE_FILL = 0.9, FRAME_H = 356, FRAME_W = 2 * R_MAX / 0.58;
+  const frameW = () => (camera.aspect < 1 ? 2 * R_MAX / 0.7 : FRAME_W);    // portrait phones: clear of the share button and slider
+  let baseDist = 1, lookFactor = 0;
+  function frameCamera() {
+    const vh = window.innerHeight;
+    const wa = workArea();
+    const tv = Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
+    let visH = FRAME_H * vh / (PHONE_FILL * wa.height);        // world height visible at the vase
+    if (visH * camera.aspect < frameW()) visH = frameW() / camera.aspect;   // keep the vase inside narrow screens
+    baseDist = visH / 2 / tv;
+    lookFactor = (vh - (wa.top + wa.bottom)) * tv / vh;
+  }
+  frameCamera();
+  function onResize() {
+    const w = window.innerWidth, h = window.innerHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h, false);
+    frameCamera();
+  }
+  window.addEventListener('resize', onResize);
+  window.addEventListener('orientationchange', onResize);
+
+  // ───────────────────────── Interaction ─────────────────────────
+  // pitch > 0 tips the lip towards the camera (looks into the neck); zoom = framing for that view.
+  // yaw 0 = the ink column faces the camera ("front"); the back is the brushed white side.
+  const HOME = { yaw: -0.62, pitch: 0.3, roll: -0.05, zoom: 1 };    // 3/4 from above: column edge, shoulder and lip
+  const VIEWS = {
+    top: { yaw: 0, pitch: 1.45, roll: 0, zoom: 0.86 },
+    front: { yaw: 0, pitch: 0.2, roll: 0, zoom: 1 },
+    back: { yaw: Math.PI, pitch: 0.2, roll: 0, zoom: 1 },
+    bottom: { yaw: 0, pitch: -1.45, roll: 0, zoom: 0.86 },
+    home: HOME
+  };
+  const PITCH_MAX = 1.5, ZOOM_MIN = 0.36, ZOOM_MAX = 1.6;
+  const state = {
+    // First load: standing still on the front view (the tilted hero stays on the home button).
+    roll: 0,
+    yaw: 0, pitch: VIEWS.front.pitch, zoom: 1,
+    tYaw: 0, tPitch: VIEWS.front.pitch, tZoom: 1,
+    vYaw: 0, vPitch: 0
+  };
+  let autoRotate = false;
+  let tween = null;
+  const clamp = THREE.MathUtils.clamp;
+
+  const autoBtn = document.getElementById('auto');
+  const viewBtns = [...document.querySelectorAll('[data-view]')];
+  const hintEl = document.getElementById('hint');
+  let hintHidden = false;
+  const hideHint = () => { if (!hintHidden) { hintHidden = true; hintEl.classList.add('gone'); } };
+  setTimeout(hideHint, 9000);
+
+  function setAuto(on) {
+    autoRotate = on;
+    autoBtn.setAttribute('aria-pressed', String(on));
+  }
+  setAuto(autoRotate);
+  // Segmented view control: the light indicator slides to the selected view; hidden when the user rotates freely.
+  const segInd = document.getElementById('seg-ind');
+  function setActive(name) {
+    let sel = null;
+    viewBtns.forEach(b => {
+      const on = b.dataset.view === name;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+      if (on) sel = b;
+    });
+    if (sel) segInd.style.transform = `translateX(${sel.offsetLeft}px)`;
+    segInd.classList.toggle('show', !!sel);
+  }
+  setActive('front');
+
+  // Tooltips: one shared bubble positioned above the hovered / keyboard-focused button
+  // (fixed-position, so the bar's horizontal scroll can't clip it).
+  const dockEl = document.getElementById('dock');
+  const tipEl = document.getElementById('tip');
+  let tipFor = null;
+  function showTip(btn) {
+    tipFor = btn;
+    tipEl.textContent = btn.dataset.tip;
+    const r = btn.getBoundingClientRect();
+    tipEl.style.left = (r.left + r.width / 2) + 'px';
+    tipEl.style.top = (r.top - 10) + 'px';
+    tipEl.classList.add('show');
+  }
+  function hideTip(btn) {
+    if (btn && btn !== tipFor) return;
+    tipFor = null;
+    tipEl.classList.remove('show');
+  }
+  const themeBtn = document.getElementById('theme');
+  const shareEl = document.getElementById('share');
+  for (const host of [dockEl, themeBtn, shareEl]) {
+    host.addEventListener('pointerover', (e) => {
+      const b = e.target.closest('[data-tip]');
+      if (b && e.pointerType !== 'touch') showTip(b);
+    });
+    host.addEventListener('pointerout', (e) => {
+      const b = e.target.closest('[data-tip]');
+      if (b && !b.contains(e.relatedTarget)) hideTip(b);
+    });
+    host.addEventListener('focusin', (e) => {
+      const b = e.target.closest('[data-tip]');
+      if (b && b.matches(':focus-visible')) showTip(b);
+    });
+    host.addEventListener('focusout', (e) => hideTip(e.target.closest('[data-tip]')));
+  }
+  dockEl.addEventListener('scroll', () => hideTip(), { passive: true });
+
+  // ── Theme: Light / Dark / Zoommer (radio group, roving tabindex)
+  const THEMES = ['light', 'zoommer', 'dark'];
+  const THEME_META = { light: '#e9ebee', dark: '#121316', zoommer: '#ff5000' };
+  const themeOpts = [...themeBtn.querySelectorAll('[data-mode]')];
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  let currentTheme = 'zoommer';
+  function applyTheme(t, persist) {
+    if (!THEMES.includes(t)) t = 'zoommer';
+    currentTheme = t;
+    document.documentElement.setAttribute('data-theme', t);
+    themeBtn.style.setProperty('--i', String(THEMES.indexOf(t)));
+    themeOpts.forEach(b => {
+      const on = b.dataset.mode === t;
+      b.setAttribute('aria-checked', String(on));
+      b.tabIndex = on ? 0 : -1;
+    });
+    if (themeMeta) themeMeta.setAttribute('content', THEME_META[t]);
+    themeLight.target = t === 'zoommer' ? 1 : 0;
+    if (persist) { try { localStorage.setItem('vase3d-theme', t); } catch (e) { /* storage unavailable */ } }
+  }
+  applyTheme(document.documentElement.getAttribute('data-theme'), false);
+  themeLight.mix = themeLight.target;            // no fade on first load…
+  setThemeLight(themeLight.mix);                 // …but the lights must start in the right state
+  themeOpts.forEach(b => b.addEventListener('click', () => applyTheme(b.dataset.mode, true)));
+  themeBtn.addEventListener('keydown', (e) => {
+    const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    let idx = THEMES.indexOf(currentTheme);
+    if (step) idx = (idx + step + THEMES.length) % THEMES.length;
+    else if (e.key === 'Home') idx = 0;
+    else if (e.key === 'End') idx = THEMES.length - 1;
+    else return;
+    e.preventDefault();
+    e.stopPropagation();
+    applyTheme(THEMES[idx], true);
+    themeOpts[idx].focus();
+  });
+
+  // Very light pointer parallax for the Zoommer studio layers.
+  const zenvEl = document.getElementById('zenv');
+  const parallax = { x: 0, y: 0, tx: 0, ty: 0 };
+  window.addEventListener('pointermove', (e) => {
+    parallax.tx = (e.clientX / window.innerWidth - 0.5) * 2;
+    parallax.ty = (e.clientY / window.innerHeight - 0.5) * 2;
+  }, { passive: true });
+
+  // Place the switch exactly midway between the bar's right edge and the zoom slider's left edge,
+  // vertically centred on the bar. If that gap is too narrow (phones), stack it centred above the bar.
+  const zoomBox = document.getElementById('zoom');
+  function placeThemeToggle() {
+    const bar = dockEl.getBoundingClientRect();
+    const zr = zoomBox.getBoundingClientRect();
+    const w = themeBtn.offsetWidth, h = themeBtn.offsetHeight;
+    const gap = zr.left - bar.right;
+    let left, top;
+    const stacked = gap < w + 24;
+    if (!stacked) {
+      left = bar.right + (gap - w) / 2;
+      top = bar.top + (bar.height - h) / 2;
+    } else {
+      left = (window.innerWidth - w) / 2;
+      top = bar.top - 12 - h;
+    }
+    themeBtn.style.left = left + 'px';
+    themeBtn.style.top = top + 'px';
+    document.documentElement.classList.toggle('theme-stacked', stacked);
+    themeBtn.classList.add('placed');
+  }
+  // ── Zoommer typography layout (px), from the work area. Desktop targets: DJI logo ≈ 67 % of the width,
+  // zoommer wordmark exactly as wide as the DJI logo's ink and centred on the screen's vertical middle; "Osmo Pocket 4" row ≈ 43 %
+  // of that width. DJI (≈ 29 %) and the top line (≈ 10 %) move up only if needed to keep clear gaps; the whole stack
+  // shrinks when the (tall) DJI logo would not fit above the wordmark.
+  const ztLine = document.getElementById('zt-line');
+  const ztPro = document.getElementById('zt-pro');
+  const ztWord = document.getElementById('zt-word');
+  // Both SVGs' viewBoxes are their ink boxes (stroke included), so equal element widths = equal visible widths.
+  const WORD_ASPECT = ztWord.viewBox.baseVal.height / ztWord.viewBox.baseVal.width;
+  const PRO_ASPECT = ztPro.viewBox.baseVal.height / ztPro.viewBox.baseVal.width;   // DJI logo viewBox = its ink box
+  let lineWidthPer100 = 0;
+  function measureLine() {
+    ztLine.style.fontSize = '100px';
+    lineWidthPer100 = ztLine.getBoundingClientRect().width;
+  }
+  function layoutBrand() {
+    if (!lineWidthPer100) measureLine();
+    const vw = window.innerWidth;
+    const wa = workArea();
+    const cx = vw / 2;
+    const zr = zoomBox.getBoundingClientRect();
+    const clearOfSlider = 2 * (zr.left - 12 - cx);     // widest a centred row can be without reaching the zoom slider
+    let w = 0.67 * vw;
+    const ratios = [0.10, 0.29, 0.50];
+    let underSlider = false;
+    if (w > clearOfSlider) {
+      if (clearOfSlider >= 0.6 * vw) w = clearOfSlider;
+      // Narrow screens: keep the words wide enough to show beside the phone; they pass behind the slider,
+      // which then gets a glass backing (CSS .zt-under-slider) so it stays legible.
+      else { w = 0.84 * vw; underSlider = true; }
+    }
+    let c0, c1, c2, lineH, proH, wordH, fs;
+    for (let i = 0; i < 14; i++) {
+      proH = w * PRO_ASPECT;
+      wordH = w * WORD_ASPECT;
+      fs = (0.43 * w) / lineWidthPer100 * 100;
+      lineH = fs * 0.78;
+      const gap = Math.max(8, 0.03 * w);
+      c2 = Math.min(window.innerHeight / 2, wa.bottom - 8 - wordH / 2);    // wordmark: middle of the screen
+      c1 = Math.min(wa.top + ratios[1] * wa.height, c2 - wordH / 2 - gap - proH / 2);
+      c0 = Math.min(wa.top + ratios[0] * wa.height, c1 - proH / 2 - gap - lineH / 2);
+      if (c0 - lineH / 2 >= wa.top + 6) break;
+      w *= 0.95;
+    }
+    document.documentElement.classList.toggle('zt-under-slider', underSlider);
+    ztLine.style.fontSize = fs.toFixed(2) + 'px';
+    ztLine.style.top = c0.toFixed(1) + 'px';
+    ztPro.style.width = w.toFixed(1) + 'px';
+    ztPro.style.height = proH.toFixed(1) + 'px';
+    ztPro.style.top = c1.toFixed(1) + 'px';
+    ztWord.style.width = w.toFixed(1) + 'px';
+    ztWord.style.height = wordH.toFixed(1) + 'px';
+    ztWord.style.top = c2.toFixed(1) + 'px';
+  }
+  function relayout() {
+    placeThemeToggle();
+    layoutBrand();
+    frameCamera();
+  }
+
+  // ── Share image: always the Zoommer look with the phone standing upright (back + side, no tilt),
+  // composed from the same backdrop gradients, typography and 3D scene. Used for the system share sheet
+  // (and Instagram); the static og-image.jpg for link previews was produced with this same function.
+  function radialEllipse(x, cx, cy, rx, ry, stops, W, H) {
+    x.save();
+    x.translate(cx, cy);
+    x.scale(1, ry / rx);
+    const g = x.createRadialGradient(0, 0, 0, 0, 0, rx);
+    stops.forEach(([o, c]) => g.addColorStop(o, c));
+    x.fillStyle = g;
+    x.fillRect(-cx - 2, (-cy - 2) * rx / ry, W + 4, (H + 4) * rx / ry);
+    x.restore();
+  }
+  async function makeShareImage(W, H) {
+    try { await document.fonts.ready; } catch (e) { /* fonts optional */ }
+    if (!lineWidthPer100) measureLine();
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    // 1. Zoommer studio backdrop (mirrors the .zenv layers)
+    radialEllipse(x, W / 2, H * 0.4, 1.2 * W, 0.95 * H, [[0, '#ff8538'], [0.36, '#ff5000'], [0.66, '#d84300'], [1, '#8c2900']], W, H);
+    radialEllipse(x, W / 2, H * 0.4, 0.44 * W, 0.4 * H, [[0, 'rgba(255,200,156,0.55)'], [0.45, 'rgba(255,164,104,0.18)'], [0.75, 'rgba(255,120,60,0)']], W, H);
+    radialEllipse(x, W / 2, -0.14 * H, 0.36 * Math.max(W, H), 0.96 * H, [[0, 'rgba(255,242,230,0.34)'], [0.42, 'rgba(255,226,202,0.12)'], [0.72, 'rgba(255,210,180,0)']], W, H);
+    radialEllipse(x, W / 2, 0.731 * H, 0.696 * W, 0.192 * H, [[0, 'rgba(255,216,184,0.46)'], [0.46, 'rgba(255,172,122,0.16)'], [0.76, 'rgba(255,120,60,0)']], W, H);
+    const lg = x.createLinearGradient(0, 0.52 * H, 0, H);
+    lg.addColorStop(0, 'rgba(118,32,0,0)'); lg.addColorStop(1, 'rgba(118,32,0,0.3)');
+    x.fillStyle = lg; x.fillRect(0, 0.52 * H, W, 0.48 * H);
+    radialEllipse(x, W / 2, 0.64 * H, 0.85 * W, 0.55 * H, [[0, 'rgba(255,234,216,0.16)'], [0.7, 'rgba(255,234,216,0)']], W, H);
+
+    // 2. Typography (same artwork and proportions as the page)
+    // Fixed-size image: text block from the top; the vase stands over its lower part, like on the page.
+    const stackPerW = 0.78 * 0.43 * 100 / lineWidthPer100 + PRO_ASPECT + WORD_ASPECT + 0.07;
+    const w = Math.min((W > H ? 0.6 : 0.8) * W, (W > H ? 0.84 : 0.52) * H / stackPerW);
+    const proH = w * PRO_ASPECT, wordH = w * WORD_ASPECT;
+    const fsz = 0.43 * w / lineWidthPer100 * 100, lineH = fsz * 0.78, gap = 0.035 * w;
+    const c0 = H * 0.065 + lineH / 2, c1 = c0 + lineH / 2 + gap + proH / 2, c2 = c1 + proH / 2 + gap + wordH / 2;
+    x.fillStyle = '#ffffff';
+    const fillSvg = (svg, vb, left, top, width, height) => {
+      x.save();
+      x.translate(left, top);
+      x.scale(width / vb.width, height / vb.height);
+      x.translate(-vb.x, -vb.y);
+      svg.querySelectorAll('path').forEach(p => x.fill(new Path2D(p.getAttribute('d')), p.getAttribute('fill-rule') === 'evenodd' ? 'evenodd' : 'nonzero'));
+      x.restore();
+    };
+    fillSvg(ztPro, ztPro.viewBox.baseVal, W / 2 - w / 2, c1 - proH / 2, w, proH);
+    fillSvg(ztWord, ztWord.viewBox.baseVal, W / 2 - w / 2, c2 - wordH / 2, w, wordH);
+    x.font = `500 ${fsz}px "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif`;
+    if ('letterSpacing' in x) x.letterSpacing = (-0.012 * fsz) + 'px';
+    x.textAlign = 'center';
+    x.textBaseline = 'alphabetic';
+    x.fillText('Hand-painted Ceramics', W / 2, c0 + 0.35 * fsz);
+
+    // 3. Vase, upright (no roll), rendered by the live renderer at the image size — restored in the same task (no flicker).
+    const saved = {
+      pr: renderer.getPixelRatio(), size: renderer.getSize(new THREE.Vector2()),
+      aspect: camera.aspect, pos: camera.position.clone(), quat: camera.quaternion.clone(),
+      rot: phone.rotation.clone(), roll: pivot.rotation.z, py: pivot.position.y,
+      li: [zHemi.intensity, zWarmL.intensity, zWarmR.intensity, rim.intensity],
+    };
+    try {
+      setThemeLight(1);
+      phone.rotation.set(0.16, 0.1, 0, 'XYZ');            // front, seen a little from above like the photos
+      pivot.rotation.z = 0; pivot.position.y = 0;
+      renderer.setPixelRatio(1);
+      renderer.setSize(W, H, false);
+      camera.aspect = W / H;
+      camera.updateProjectionMatrix();
+      const tv = Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
+      // vase ≈ 62 % (portrait: 58 %) of the image height…
+      const visH = Math.max(FRAME_H / (W > H ? 0.62 : 0.58), 2 * R_MAX / (W > H ? 0.62 : 0.8) / (W / H));
+      const d = visH / 2 / tv;
+      const ly = (W > H ? 0.1 : 0.14) * visH;            // …centred at 60 % (portrait: 64 %) of the height
+      camera.position.set(0, ly + Math.sin(0.04) * d, Math.cos(0.04) * d);
+      camera.lookAt(0, ly, 0);
+      updateShadow();
+      renderer.render(scene, camera);
+      x.drawImage(renderer.domElement, 0, 0, W, H);
+    } finally {
+      [zHemi.intensity, zWarmL.intensity, zWarmR.intensity, rim.intensity] = saved.li;
+      phone.rotation.copy(saved.rot); pivot.rotation.z = saved.roll; pivot.position.y = saved.py;
+      renderer.setPixelRatio(saved.pr);
+      renderer.setSize(saved.size.x, saved.size.y, false);
+      camera.aspect = saved.aspect; camera.updateProjectionMatrix();
+      camera.position.copy(saved.pos); camera.quaternion.copy(saved.quat);
+      updateShadow();
+      renderer.render(scene, camera);
+    }
+    return new Promise((res, rej) => c.toBlob(b => (b ? res(b) : rej(new Error('toBlob failed'))), 'image/jpeg', 0.92));
+  }
+
+  window.__viewer.shareImage = makeShareImage;
+
+  // ── Share control
+  const SHARE_URL = (document.querySelector('link[rel="canonical"]') || {}).href || (location.origin + location.pathname);
+  const SHARE_TITLE = 'Ceramic Art Vase — Zoommer';
+  const shareBtn = document.getElementById('share-btn');
+  const shareMenu = document.getElementById('share-menu');
+  const shareToast = document.getElementById('share-toast');
+  const shareActions = [...shareMenu.querySelectorAll('[data-share]')];
+  const canNativeShare = typeof navigator.share === 'function';
+  const isPhone = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);          // iPadOS reports as Mac
+  let canShareFiles = false;
+  try {
+    canShareFiles = canNativeShare && typeof navigator.canShare === 'function' &&
+      navigator.canShare({ files: [new File([new Blob(['x'], { type: 'image/jpeg' })], 'x.jpg', { type: 'image/jpeg' })] });
+  } catch (e) { canShareFiles = false; }
+  shareMenu.querySelector('[data-share="more"]').hidden = !canNativeShare;     // no system sheet → no "More"
+  shareActions.filter(b => !b.hidden).forEach((b, i) => b.style.setProperty('--k', String(i)));
+
+  let shareFile = null;                                    // cached share image (File), rebuilt when the colour changes
+  function prepareShareFile() {
+    if (!shareFile) {
+      shareFile = makeShareImage(1080, 1350)
+        .then(blob => new File([blob], 'ceramic-art-vase-zoommer.jpg', { type: 'image/jpeg' }))
+        .catch(() => null);
+    }
+    return shareFile;
+  }
+  document.querySelectorAll('.swatches button').forEach(b => b.addEventListener('click', () => { shareFile = null; }));
+
+  function layoutShareMenu() {
+    shareEl.classList.remove('vertical', 'up');
+    const r = shareEl.getBoundingClientRect();
+    const k = r.width / shareEl.offsetWidth;                // current CSS scale (0.9)
+    const need = (64 + shareMenu.offsetWidth) * k;
+    if (r.left + need > window.innerWidth - 12) {
+      shareEl.classList.add('vertical');
+      const below = window.innerHeight - r.bottom - 8;
+      if (below < shareMenu.offsetHeight * k + 12) shareEl.classList.add('up');
+    }
+  }
+  // The 0 mark is the exact centre of the slider's track area (#zoom-hit, present in the HTML from the start;
+  // the tick marks themselves are generated later in this script).
+  const zoomTrackArea = document.getElementById('zoom-hit');
+  function alignShareToZero() {
+    const z = zoomTrackArea.getBoundingClientRect();
+    shareEl.style.top = (z.top + z.height / 2) + 'px';     // .share is translateY(-50%), so its centre lands on the 0 mark
+  }
+  alignShareToZero();
+  window.addEventListener('resize', () => {
+    alignShareToZero();
+    if (shareEl.classList.contains('open')) layoutShareMenu();
+  });
+  function setShareOpen(open) {
+    if (open) layoutShareMenu();
+    shareEl.classList.toggle('open', open);
+    shareBtn.setAttribute('aria-expanded', String(open));
+    const label = open ? 'გაზიარების დახურვა' : 'გაზიარება';
+    shareBtn.setAttribute('aria-label', label);
+    shareBtn.dataset.tip = label;
+    shareMenu.inert = !open;                                 // closed actions stay out of the Tab order
+    shareMenu.setAttribute('aria-hidden', String(!open));
+    hideTip();
+    if (open && canShareFiles) prepareShareFile();          // ready before the user picks a target
+  }
+  shareBtn.addEventListener('click', () => setShareOpen(!shareEl.classList.contains('open')));
+  // Outside press closes it without blocking anything: a drag that starts on the scene still rotates the phone.
+  document.addEventListener('pointerdown', (e) => {
+    if (shareEl.classList.contains('open') && !shareEl.contains(e.target)) setShareOpen(false);
+  }, true);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && shareEl.classList.contains('open')) { setShareOpen(false); shareBtn.focus(); }
+  });
+
+  let toastTimer = 0;
+  function showToast(msg) {
+    shareToast.textContent = msg;
+    shareToast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => shareToast.classList.remove('show'), 1800);
+  }
+  async function copyLink(btn, msg) {
+    let ok = false;
+    try { await navigator.clipboard.writeText(SHARE_URL); ok = true; }
+    catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = SHARE_URL; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+      ta.remove();
+    }
+    if (!ok) return false;
+    if (btn && btn.dataset.share === 'copy') {
+      btn.classList.add('done');
+      setTimeout(() => btn.classList.remove('done'), 1800);
+    }
+    showToast(msg || 'ბმული დაკოპირებულია');
+    return true;
+  }
+  const isAbort = (e) => e && e.name === 'AbortError';        // user closed the share sheet — not an error
+  async function nativeShare(withFile) {
+    const data = { title: SHARE_TITLE, text: SHARE_TITLE, url: SHARE_URL };
+    if (withFile) {
+      const file = await prepareShareFile();
+      if (file && navigator.canShare({ files: [file] })) { data.files = [file]; data.text = `${SHARE_TITLE} ${SHARE_URL}`; }
+    }
+    try { await navigator.share(data); } catch (e) { if (!isAbort(e)) throw e; }
+  }
+  const openWindow = (url) => window.open(url, '_blank', 'noopener,noreferrer,width=640,height=680');
+
+  shareActions.forEach(btn => btn.addEventListener('click', async () => {
+    const act = btn.dataset.share;
+    try {
+      if (act === 'whatsapp') { openWindow(`https://wa.me/?text=${encodeURIComponent(`${SHARE_TITLE} ${SHARE_URL}`)}`); setShareOpen(false); }
+      else if (act === 'facebook') {
+        // On phones the Facebook app captures facebook.com links and drops the sharer's ?u= (it just opens the feed).
+        // There, hand the link to the app via the system share sheet instead — it posts it with the og:image preview.
+        if (isPhone && canNativeShare) await nativeShare(false);
+        else { openWindow(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SHARE_URL)}`); setShareOpen(false); }
+      }
+      else if (act === 'copy') { await copyLink(btn); }
+      else if (act === 'more') { await nativeShare(canShareFiles); }
+      else if (act === 'instagram') {
+        if (canShareFiles) {
+          await nativeShare(true);                         // share sheet with the Zoommer image → pick Instagram
+        } else {
+          // Instagram has no web share link: copy the product link and save the Zoommer image to post it.
+          const copied = await copyLink(btn, 'ბმული დაკოპირებულია · სურათი შენახულია');
+          const file = await makeShareImage(1080, 1350);
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(file);
+          a.download = 'ceramic-art-vase-zoommer.jpg';
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+          if (!copied) showToast('სურათი შენახულია');
+        }
+      }
+    } catch (e) {
+      console.warn('share failed', e);
+      showToast('გაზიარება ვერ მოხერხდა');
+    }
+  }));
+  relayout();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { lineWidthPer100 = 0; relayout(); });
+
+  window.addEventListener('resize', () => {
+    hideTip();
+    setActive(viewBtns.find(b => b.classList.contains('active'))?.dataset.view ?? null);
+    relayout();
+  });
+
+  // ── Zoom slider: level −3 (farthest) … 0 (default framing) … +3 (closest).
+  // Level ↔ zoom factor is exponential, so each step feels the same; it stays in sync with wheel / pinch / keys.
+  const LEVEL_MAX = 3;
+  const zoomFromLevel = (v) => (v >= 0 ? Math.pow(ZOOM_MIN, v / LEVEL_MAX) : Math.pow(ZOOM_MAX, -v / LEVEL_MAX));
+  const levelFromZoom = (z) => (z <= 1 ? LEVEL_MAX * Math.log(z) / Math.log(ZOOM_MIN) : -LEVEL_MAX * Math.log(z) / Math.log(ZOOM_MAX));
+  const zoomEl = document.getElementById('zoom');
+  const zoomHit = document.getElementById('zoom-hit');
+  const zoomThumb = document.getElementById('zoom-thumb');
+  const zoomFill = document.getElementById('zoom-fill');
+  const zoomNum = document.getElementById('zoom-num');
+  const ticksEl = document.getElementById('zoom-ticks');
+  const ticks = [];
+  for (let i = 0; i <= 24; i++) {
+    const v = LEVEL_MAX - i * 0.25;
+    const t = document.createElement('i');
+    if (Number.isInteger(v)) t.classList.add('major');
+    if (v === 0) t.classList.add('zero');
+    t.style.top = (i / 24 * 100) + '%';
+    ticksEl.appendChild(t);
+    ticks.push({ el: t, v });
+  }
+  const fmtLevel = (v) => {
+    const r = Math.round(v * 100) / 100;
+    if (Math.abs(r) < 0.005) return '0';
+    const s = String(Math.abs(r));
+    return (r > 0 ? '+' : '−') + s;
+  };
+  let shownLevel = NaN;
+  function renderZoomUI(level) {
+    const v = clamp(Math.round(level * 100) / 100, -LEVEL_MAX, LEVEL_MAX);
+    if (v === shownLevel) return;
+    shownLevel = v;
+    const pos = (LEVEL_MAX - v) / (2 * LEVEL_MAX) * 100;   // % from top
+    zoomThumb.style.top = pos + '%';
+    zoomFill.style.top = Math.min(pos, 50) + '%';
+    zoomFill.style.height = Math.abs(pos - 50) + '%';
+    for (const t of ticks) {
+      const on = (v > 0 && t.v > 0 && t.v <= v + 1e-6) || (v < 0 && t.v < 0 && t.v >= v - 1e-6);
+      t.el.classList.toggle('on', on);
+    }
+    const txt = fmtLevel(v);
+    zoomNum.textContent = txt;
+    zoomHit.setAttribute('aria-valuenow', String(Math.round(v * 100) / 100));
+    zoomHit.setAttribute('aria-valuetext', txt);
+  }
+  function setLevel(v) {
+    v = clamp(v, -LEVEL_MAX, LEVEL_MAX);
+    if (Math.abs(v) < 0.12) v = 0;                         // soft detent at the default
+    state.tZoom = zoomFromLevel(Math.round(v * 20) / 20);   // 0.05 grid, so ¼-steps add up exactly
+    renderZoomUI(levelFromZoom(state.tZoom));
+    hideHint();
+  }
+
+  let zoomDrag = null;
+  zoomHit.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    e.preventDefault();
+    try { zoomHit.setPointerCapture(e.pointerId); } catch (err) { /* pointer already gone */ }
+    const tr = zoomThumb.getBoundingClientRect();
+    const onThumb = e.clientY >= tr.top && e.clientY <= tr.bottom;
+    zoomDrag = { id: e.pointerId, offset: onThumb ? e.clientY - (tr.top + tr.height / 2) : 0 };
+    zoomEl.classList.add('active');
+    zoomHit.focus({ preventScroll: true });
+    const r = zoomHit.getBoundingClientRect();
+    setLevel(LEVEL_MAX - ((e.clientY - zoomDrag.offset - r.top) / r.height) * 2 * LEVEL_MAX);
+  });
+  zoomHit.addEventListener('pointermove', (e) => {
+    if (!zoomDrag || e.pointerId !== zoomDrag.id) return;
+    const r = zoomHit.getBoundingClientRect();
+    setLevel(LEVEL_MAX - ((e.clientY - zoomDrag.offset - r.top) / r.height) * 2 * LEVEL_MAX);
+  });
+  const endZoomDrag = (e) => {
+    if (!zoomDrag || e.pointerId !== zoomDrag.id) return;
+    zoomDrag = null;
+    zoomEl.classList.remove('active');
+  };
+  zoomHit.addEventListener('pointerup', endZoomDrag);
+  zoomHit.addEventListener('pointercancel', endZoomDrag);
+  zoomHit.addEventListener('lostpointercapture', endZoomDrag);
+  zoomHit.addEventListener('dblclick', (e) => { e.stopPropagation(); setLevel(0); });
+  zoomHit.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    setLevel(levelFromZoom(state.tZoom) - Math.sign(e.deltaY) * 0.25);
+  }, { passive: false });
+  zoomHit.addEventListener('keydown', (e) => {
+    const cur = levelFromZoom(state.tZoom);
+    const map = { ArrowUp: 0.25, ArrowRight: 0.25, ArrowDown: -0.25, ArrowLeft: -0.25, PageUp: 1, PageDown: -1 };
+    let next = null;
+    if (e.key in map) next = cur + map[e.key];
+    else if (e.key === 'Home') next = LEVEL_MAX;
+    else if (e.key === 'End') next = -LEVEL_MAX;
+    else if (e.key === '0') next = 0;
+    if (next === null) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setLevel(next);
+  });
+  renderZoomUI(0);
+
+  function goTo(name) {
+    const v = VIEWS[name];
+    const cy = state.yaw;
+    const ty = cy + Math.atan2(Math.sin(v.yaw - cy), Math.cos(v.yaw - cy)); // shortest way round
+    tween = { y0: cy, p0: state.pitch, r0: state.roll, y1: ty, p1: v.pitch, r1: v.roll, t0: performance.now(), dur: reducedMotion ? 350 : 1150 };
+    state.tZoom = v.zoom ?? 1;
+    state.vYaw = state.vPitch = 0;
+    if (name !== 'home') setAuto(false);
+    setActive(name);
+  }
+  viewBtns.forEach(b => b.addEventListener('click', () => goTo(b.dataset.view)));
+  autoBtn.addEventListener('click', () => { setAuto(!autoRotate); if (autoRotate) setActive(null); });
+
+  document.querySelectorAll('.swatches button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.swatches button').forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+    applyPalette(b.dataset.color);
+  }));
+
+  const pointers = new Map();
+  let dragging = false, moved = false, pinchDist = 0, lastMoveT = 0;
+  const pinchDistance = () => {
+    const [a, b] = [...pointers.values()];
+    return Math.hypot(a.x - b.x, a.y - b.y) || 1;
+  };
+
+  canvas.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* pointer already gone */ }
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 1) {
+      dragging = true; moved = false;
+      state.vYaw = state.vPitch = 0;
+      canvas.classList.add('dragging');
+    } else if (pointers.size === 2) {
+      pinchDist = pinchDistance();
+    }
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    const p = pointers.get(e.pointerId);
+    if (!p) return;
+    const dx = e.clientX - p.x, dy = e.clientY - p.y;
+    p.x = e.clientX; p.y = e.clientY;
+
+    if (pointers.size === 1) {
+      if (!moved && Math.hypot(dx, dy) > 0.5) {
+        moved = true;
+        tween = null;
+        setAuto(false);   // user started rotating → stop auto-rotation
+        setActive(null);
+        hideHint();
+      }
+      if (!moved) return;
+      const k = 0.0075;
+      const now = performance.now();
+      const dt = Math.max((now - lastMoveT) / 1000, 1 / 240);
+      lastMoveT = now;
+      state.tYaw += dx * k;
+      state.tPitch = clamp(state.tPitch + dy * k * 0.85, -PITCH_MAX, PITCH_MAX);
+      state.vYaw = state.vYaw * 0.4 + (dx * k / dt) * 0.6;
+      state.vPitch = state.vPitch * 0.4 + (dy * k * 0.85 / dt) * 0.6;
+    } else if (pointers.size === 2) {
+      const d = pinchDistance();
+      state.tZoom = clamp(state.tZoom * (pinchDist / d), ZOOM_MIN, ZOOM_MAX);
+      pinchDist = d;
+      state.vYaw = state.vPitch = 0;
+      hideHint();
+    }
+  });
+
+  const endPointer = (e) => {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.delete(e.pointerId);
+    if (pointers.size === 1) {
+      state.vYaw = state.vPitch = 0;   // pinch → single finger: no fling
+    }
+    if (pointers.size === 0) {
+      dragging = false;
+      canvas.classList.remove('dragging');
+      if (performance.now() - lastMoveT > 90) state.vYaw = state.vPitch = 0;
+      const vmax = 6;
+      state.vYaw = clamp(state.vYaw, -vmax, vmax);
+      state.vPitch = clamp(state.vPitch, -vmax, vmax);
+    }
+  };
+  canvas.addEventListener('pointerup', endPointer);
+  canvas.addEventListener('pointercancel', endPointer);
+  canvas.addEventListener('lostpointercapture', endPointer);
+
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY;
+    state.tZoom = clamp(state.tZoom * Math.exp(clamp(delta, -200, 200) * 0.0012), ZOOM_MIN, ZOOM_MAX);
+    hideHint();
+  }, { passive: false });
+
+  canvas.addEventListener('dblclick', () => goTo('home'));
+
+  window.addEventListener('keydown', (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const map = { '1': 'top', '2': 'front', '3': 'back', '4': 'bottom', '0': 'home', 'h': 'home' };
+    if (map[e.key]) goTo(map[e.key]);
+    else if (e.key === 'r' || e.key === 'R') setAuto(!autoRotate);
+    else if (e.key === '+' || e.key === '=') state.tZoom = clamp(state.tZoom * 0.88, ZOOM_MIN, ZOOM_MAX);
+    else if (e.key === '-' || e.key === '_') state.tZoom = clamp(state.tZoom / 0.88, ZOOM_MIN, ZOOM_MAX);
+  });
+
+  // ───────────────────────── Render loop ─────────────────────────
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const clock = new THREE.Clock();
+  let perfFrames = 0, perfTime = 0;
+
+  function frame() {
+    const dt = Math.min(clock.getDelta(), 0.05);
+    const t = clock.elapsedTime;
+
+    if (tween) {
+      const p = clamp((performance.now() - tween.t0) / tween.dur, 0, 1);
+      const e = ease(p);
+      state.yaw = state.tYaw = tween.y0 + (tween.y1 - tween.y0) * e;
+      state.pitch = state.tPitch = tween.p0 + (tween.p1 - tween.p0) * e;
+      state.roll = tween.r0 + (tween.r1 - tween.r0) * e;
+      if (p >= 1) tween = null;
+    } else {
+      if (!dragging) {
+        state.tYaw += state.vYaw * dt;
+        state.tPitch = clamp(state.tPitch + state.vPitch * dt, -PITCH_MAX, PITCH_MAX);
+        const decay = Math.exp(-dt * 3.2);
+        state.vYaw *= decay; state.vPitch *= decay;
+        if (autoRotate) state.tYaw += dt * 0.32;
+      }
+      const f = 1 - Math.exp(-dt * 14);
+      state.yaw += (state.tYaw - state.yaw) * f;
+      state.pitch += (state.tPitch - state.pitch) * f;
+    }
+    state.zoom += (state.tZoom - state.zoom) * (1 - Math.exp(-dt * 9));
+    if (!zoomDrag) renderZoomUI(levelFromZoom(state.tZoom));   // reflect wheel / pinch / view resets
+
+    // Keep angles bounded without visible jumps.
+    if (Math.abs(state.yaw) > 1000 && !tween) {
+      const off = Math.round(state.yaw / (Math.PI * 2)) * Math.PI * 2;
+      state.yaw -= off; state.tYaw -= off;
+    }
+
+    phone.rotation.set(state.pitch, state.yaw, 0, 'XYZ');
+    pivot.position.y = reducedMotion ? 0 : Math.sin(t * 0.8) * 1.4;
+    pivot.rotation.z = state.roll;
+
+    // Zoommer lighting cross-fade (~0.8 s, matching the backdrop).
+    if (themeLight.mix !== themeLight.target) {
+      const d = themeLight.target - themeLight.mix;
+      themeLight.mix = Math.abs(d) < 0.002 || reducedMotion ? themeLight.target : themeLight.mix + d * (1 - Math.exp(-dt * 4.2));
+      setThemeLight(themeLight.mix);
+    }
+    if (currentTheme === 'zoommer' && !reducedMotion) {
+      const f = 1 - Math.exp(-dt * 3);
+      const nx = parallax.x + (parallax.tx - parallax.x) * f;
+      const ny = parallax.y + (parallax.ty - parallax.y) * f;
+      if (Math.abs(nx - parallax.x) + Math.abs(ny - parallax.y) > 0.0005) {
+        parallax.x = nx; parallax.y = ny;
+        zenvEl.style.setProperty('--px', nx.toFixed(4));
+        zenvEl.style.setProperty('--py', ny.toFixed(4));
+      }
+    }
+
+    const dist = baseDist * state.zoom;
+    LOOK_AT.y = -lookFactor * dist;
+    const elev = 0.07;
+    camera.position.set(LOOK_AT.x, LOOK_AT.y + Math.sin(elev) * dist, Math.cos(elev) * dist);
+    camera.lookAt(LOOK_AT);
+
+    updateShadow();
+    renderer.render(scene, camera);
+
+    // Adaptive resolution: step the pixel ratio down if the GPU can't keep up.
+    perfFrames++; perfTime += dt;
+    if (perfFrames >= 90) {
+      const avg = perfTime / perfFrames;
+      if (avg > 1 / 40 && pixelRatio > 1) {
+        pixelRatio = Math.max(1, pixelRatio - 0.25);
+        renderer.setPixelRatio(pixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight, false);
+      }
+      perfFrames = 0; perfTime = 0;
+    }
+  }
+
+  await step('შეიდერების კომპილაცია…');
+  camera.position.set(0, 0, baseDist);
+  camera.lookAt(LOOK_AT);
+  try { await renderer.compileAsync(scene, camera); } catch (e) { /* falls back to compile on first render */ }
+
+  renderer.setAnimationLoop(frame);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    window.__READY__ = true;
+    clearTimeout(window.__loadTimer);
+    loaderEl.classList.add('done');
+    setTimeout(() => { loaderEl.style.display = 'none'; }, 800);
+  }));
+}
+</script>
+</body>
+</html>
